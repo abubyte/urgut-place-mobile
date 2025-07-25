@@ -8,6 +8,6 @@ class Routes {
   static const String register = '/register';
   static const String verify = '/verify';
   static const String search = '/search';
-  static const String items = '/items';
+  static const String like = '/liked';
   static const String shop = '/shop';
 }

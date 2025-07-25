@@ -9,7 +9,7 @@ import 'package:urgut_please/shared/services/api_service.dart';
 abstract class LikeService {
   Future<List<LikeModel>> getLikes();
   Future<LikeModel> createLike(int shopId);
-  Future<void> deleteLike(int shopId);
+  Future<void> deleteLike(int likeId);
 }
 
 class LikeServiceImpl implements LikeService {
@@ -26,10 +26,8 @@ class LikeServiceImpl implements LikeService {
       final response = await getIt<ApiService>().getRequest(ApiEndpoints.likes);
 
       late final List<LikeModel> likes;
-      late final List<Map<String, dynamic>> responseJson;
       if (response.data != null) {
-        responseJson = response.data;
-        likes = responseJson.map((e) => LikeModel.fromJson(e)).toList();
+        likes = (response.data as List).map((e) => LikeModel.fromJson(e)).toList();
       } else {
         throw ApiException("Likes are not available");
       }
@@ -51,7 +49,7 @@ class LikeServiceImpl implements LikeService {
       }
 
       // Get request
-      final response = await getIt<ApiService>().getRequest(ApiEndpoints.likes, data: {"shop_id": shopId});
+      final response = await getIt<ApiService>().postRequest(ApiEndpoints.likes, data: {"shop_id": shopId});
 
       late final LikeModel like;
       if (response.data != null) {
@@ -68,7 +66,7 @@ class LikeServiceImpl implements LikeService {
   }
 
   @override
-  Future<void> deleteLike(int shopId) async {
+  Future<void> deleteLike(int likeId) async {
     try {
       // Check connection
       final result = await InternetAddress.lookup('example.com');
@@ -77,7 +75,7 @@ class LikeServiceImpl implements LikeService {
       }
 
       // Get request
-      await getIt<ApiService>().deleteRequest(ApiEndpoints.likes, shopId);
+      await getIt<ApiService>().deleteRequest(ApiEndpoints.likes, likeId);
     } catch (e) {
       rethrow;
     }

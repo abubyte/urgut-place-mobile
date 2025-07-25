@@ -1,37 +1,17 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:urgut_please/config/routes/routes.dart';
-import 'package:urgut_please/features/explore/views/shop/widgets/shop_screen.dart';
-import 'package:url_launcher/url_launcher.dart';
-
-final imageUrls = <String>[
-  "https://picsum.photos/seed/1/200/400",
-  "https://picsum.photos/seed/2/200/400",
-  "https://picsum.photos/seed/3/200/400",
-  "https://picsum.photos/seed/4/200/400",
-  "https://picsum.photos/seed/5/200/400",
-  "https://picsum.photos/seed/6/200/400",
-  "https://picsum.photos/seed/7/200/400",
-  "https://picsum.photos/seed/8/200/400",
-  "https://picsum.photos/seed/9/200/400",
-  "https://picsum.photos/seed/10/200/400",
-  "https://picsum.photos/seed/11/200/400",
-  "https://picsum.photos/seed/12/200/400",
-];
-
-final names = <String>[
-  "Yulduz Do'koni",
-  "Nur Kiyim",
-  "Yulduz Do'koni",
-  "Nur Kiyim",
-  "Yulduz Do'koni",
-  "Nur Kiyim",
-  "Yulduz Do'koni",
-  "Nur Kiyim",
-  "Yulduz Do'koni",
-  "Nur Kiyim",
-];
+import 'package:urgut_please/features/explore/viewmodels/home/home_bloc.dart';
+import 'package:urgut_please/features/explore/viewmodels/home/home_event.dart';
+import 'package:urgut_please/features/explore/viewmodels/home/home_state.dart';
+import 'package:urgut_please/features/explore/viewmodels/like/like_bloc.dart';
+import 'package:urgut_please/features/explore/viewmodels/like/like_event.dart';
+import 'package:urgut_please/shared/widgets/shop_item.dart';
+import 'package:urgut_please/shared/widgets/shop_item_shimmer.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -46,248 +26,250 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
   }
 
+  Future<void> _onRefresh() async {
+    context.read<HomeBloc>().add(FetchShopsRequested());
+    // Add a small delay to ensure the refresh indicator shows
+    await Future.delayed(Duration(milliseconds: 500));
+  }
+
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 4,
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: SafeArea(
-          child: NestedScrollView(
-            headerSliverBuilder: (_, innerBoxIsScrollable) {
-              return [
-                SliverAppBar(
-                  pinned: true,
-                  floating: true,
-                  expandedHeight: 420,
-                  automaticallyImplyLeading: false,
-                  backgroundColor: Colors.white,
-                  flexibleSpace: ListView(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    children: [
-                      SizedBox(height: 16),
-                      // Search Bar
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16),
-                        child: Row(
-                          children: [
-                            Container(
-                              width: MediaQuery.of(context).size.width - 80,
-                              height: 43,
-                              decoration: BoxDecoration(
-                                color: Colors.grey.withAlpha((255 * 0.4).toInt()),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text("Qidirish", style: TextStyle(color: Colors.black38)),
-                                    Icon(Icons.search, color: Colors.black38),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            IconButton(
-                              onPressed: () => context.go(Routes.items),
-                              icon: Icon(Icons.favorite_outline, size: 24),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 24),
+    return BlocBuilder<HomeBloc, HomeState>(
+      builder: (context, state) {
+        return DefaultTabController(
+          length: state.status == HomeStatus.loading ? 4 : state.categories.length,
+          child: Scaffold(
+            backgroundColor: Colors.white,
+            body: SafeArea(
+              child: NestedScrollView(
+                headerSliverBuilder: (_, innerBoxIsScrollable) {
+                  return [
+                    SliverAppBar(
+                      pinned: true,
+                      floating: true,
+                      expandedHeight: 420,
+                      automaticallyImplyLeading: false,
+                      backgroundColor: Colors.white,
+                      flexibleSpace: ListView(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        children: [
+                          SizedBox(height: 16),
 
-                      // Featured Carousel
-                      CarouselSlider(
-                        options: CarouselOptions(
-                          height: 200,
-                          autoPlay: true,
-                          enlargeCenterPage: false,
-                          enableInfiniteScroll: true,
-                          viewportFraction: .9,
-                        ),
-                        items: imageUrls.map((url) {
-                          return Builder(
-                            builder: (context) => GestureDetector(
-                              onTap: () => context.go(Routes.shop),
-                              child: Container(
-                                margin: EdgeInsets.symmetric(horizontal: 6),
-                                height: 250,
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(25),
-                                  image: DecorationImage(image: NetworkImage(url), fit: BoxFit.cover),
+                          // Search Bar
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16),
+                            child: Row(
+                              children: [
+                                GestureDetector(
+                                  onTap: () => context.go(Routes.search),
+                                  child: Container(
+                                    width: MediaQuery.of(context).size.width - 80,
+                                    height: 43,
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey.withAlpha((255 * 0.4).toInt()),
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text("Qidirish", style: TextStyle(color: Colors.black38)),
+                                          Icon(Icons.search, color: Colors.black38),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                              ),
+                                IconButton(
+                                  onPressed: () {
+                                    context.read<LikeBloc>().add(GetLikes());
+                                    context.go(Routes.like);
+                                  },
+                                  icon: Icon(Icons.favorite_outline, size: 24),
+                                ),
+                              ],
                             ),
-                          );
-                        }).toList(),
-                      ),
-                      SizedBox(height: 16),
-
-                      // Discount Button
-                      Container(
-                        margin: EdgeInsets.symmetric(horizontal: 16),
-                        width: double.maxFinite,
-                        height: 50,
-                        decoration: BoxDecoration(color: Colors.purple, borderRadius: BorderRadius.circular(12)),
-                        child: Center(
-                          child: Text(
-                            "30%",
-                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 24),
                           ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  bottom: PreferredSize(
-                    preferredSize: const Size.fromHeight(kToolbarHeight),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(topLeft: Radius.circular(25), topRight: Radius.circular(25)),
-                      ),
-                      child: TabBar(
-                        isScrollable: true,
-                        tabs: [
-                          Tab(child: Text("Hammasi")),
-                          Tab(child: Text("Oziq-ovqat")),
-                          Tab(child: Text("Kiyim")),
-                          Tab(child: Text("Texnika")),
+                          SizedBox(height: 24),
+
+                          // Featured Carousel - Fixed to handle loading and empty states
+                          CarouselSlider(
+                            options: CarouselOptions(
+                              height: 200,
+                              autoPlay: state.status != HomeStatus.loading && state.featuredShops.isNotEmpty,
+                              enlargeCenterPage: false,
+                              enableInfiniteScroll:
+                                  state.status != HomeStatus.loading && state.featuredShops.length > 1,
+                              viewportFraction: .9,
+                            ),
+                            items: state.status == HomeStatus.loading
+                                ? List.generate(3, (index) {
+                                    return Shimmer.fromColors(
+                                      baseColor: Colors.grey.shade300,
+                                      highlightColor: Colors.grey.shade100,
+                                      child: Container(
+                                        margin: EdgeInsets.symmetric(horizontal: 6),
+                                        height: 200,
+                                        width: double.infinity,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.circular(25),
+                                        ),
+                                      ),
+                                    );
+                                  })
+                                : state.featuredShops.isNotEmpty
+                                ? state.featuredShops
+                                      .where((shop) => shop.imageUrls.isNotEmpty)
+                                      .map(
+                                        (shop) => GestureDetector(
+                                          onTap: () => context.go(Routes.shop, extra: shop),
+                                          child: Container(
+                                            margin: EdgeInsets.symmetric(horizontal: 6),
+                                            height: 200,
+                                            width: double.infinity,
+                                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(25)),
+                                            child: ClipRRect(
+                                              borderRadius: BorderRadius.circular(25),
+                                              child: CachedNetworkImage(
+                                                imageUrl: shop.imageUrls[0],
+                                                fit: BoxFit.cover,
+                                                placeholder: (context, url) => Shimmer.fromColors(
+                                                  baseColor: Colors.grey.shade300,
+                                                  highlightColor: Colors.grey.shade100,
+                                                  child: Container(
+                                                    width: double.infinity,
+                                                    height: double.infinity,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                                errorWidget: (context, url, error) => Container(
+                                                  width: double.infinity,
+                                                  height: double.infinity,
+                                                  color: Colors.grey.shade200,
+                                                  child: Column(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    children: [
+                                                      Icon(Icons.error_outline, size: 40, color: Colors.grey),
+                                                      SizedBox(height: 8),
+                                                      Text(
+                                                        'Image not available',
+                                                        style: TextStyle(color: Colors.grey, fontSize: 12),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                      .toList()
+                                : [
+                                    // Fallback when no featured shops available
+                                    Container(
+                                      margin: EdgeInsets.symmetric(horizontal: 6),
+                                      height: 200,
+                                      width: double.infinity,
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey.shade200,
+                                        borderRadius: BorderRadius.circular(25),
+                                      ),
+                                      child: Center(
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Icon(Icons.store_outlined, size: 48, color: Colors.grey),
+                                            SizedBox(height: 8),
+                                            Text(
+                                              'No featured shops available',
+                                              style: TextStyle(color: Colors.grey, fontSize: 16),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                          ),
+                          SizedBox(height: 16),
+
+                          // Discount Button
+                          Container(
+                            margin: EdgeInsets.symmetric(horizontal: 16),
+                            width: double.maxFinite,
+                            height: 50,
+                            decoration: BoxDecoration(color: Colors.purple, borderRadius: BorderRadius.circular(12)),
+                            child: Center(
+                              child: Text(
+                                "30%",
+                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 24),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
-                    ),
-                  ),
-                ),
-              ];
-            },
-            body: TabBarView(
-              children: List.generate(
-                4,
-                (_) => SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 12, right: 12, top: 12),
-                    child: GridView(
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 8,
-                        mainAxisSpacing: 8,
-                        childAspectRatio: .57,
+                      bottom: PreferredSize(
+                        preferredSize: const Size.fromHeight(kToolbarHeight),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(25),
+                              topRight: Radius.circular(25),
+                            ),
+                          ),
+                          child: TabBar(
+                            isScrollable: true,
+                            tabs: state.status == HomeStatus.loading
+                                ? List.generate(4, (index) => Tab(child: Text('Loading...')))
+                                : state.categories.map((category) => Tab(child: Text(category.name))).toList(),
+                          ),
+                        ),
                       ),
-                      children: List.generate(
-                        10,
-                        (index) => GestureDetector(
-                          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ShopScreen())),
-                          child: Padding(
-                            padding: EdgeInsets.all(4),
-                            child: Container(
-                              padding: EdgeInsets.all(6),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(12),
-                                boxShadow: [
-                                  BoxShadow(
-                                    blurRadius: 4,
-                                    spreadRadius: 1,
-                                    color: Colors.black.withAlpha((255 * .08).toInt()),
-                                  ),
-                                ],
+                    ),
+                  ];
+                },
+                body: TabBarView(
+                  children: List.generate(
+                    state.status == HomeStatus.loading ? 4 : state.categories.length,
+                    (i) => RefreshIndicator(
+                      onRefresh: _onRefresh,
+                      child: CustomScrollView(
+                        slivers: [
+                          SliverPadding(
+                            padding: EdgeInsets.only(left: 12, right: 12, top: 12),
+                            sliver: SliverGrid(
+                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 8,
+                                mainAxisSpacing: 8,
+                                childAspectRatio: .57,
                               ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Expanded(
-                                    flex: 4,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(12),
-                                        image: DecorationImage(
-                                          image: NetworkImage(imageUrls[index]),
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                      child: Align(
-                                        alignment: Alignment.topRight,
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius: BorderRadius.circular(12),
-                                          ),
-                                          height: 35,
-                                          width: 35,
-                                          margin: EdgeInsets.only(top: 10, right: 10),
-                                          child: Center(
-                                            child: IconButton(
-                                              onPressed: () {},
-                                              icon: Icon(Icons.favorite_outline, size: 18),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 3,
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                              delegate: SliverChildBuilderDelegate(
+                                (context, j) {
+                                  if (state.status == HomeStatus.loading) {
+                                    return const ShopItemShimmer();
+                                  }
 
-                                      children: [
-                                        SizedBox(height: 6),
-                                        Text(
-                                          names[index],
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                        SizedBox(height: 4),
-                                        Row(
-                                          children: [
-                                            Icon(Icons.star, color: Colors.yellow, size: 14),
-                                            Icon(Icons.star, color: Colors.yellow, size: 14),
-                                            Icon(Icons.star, color: Colors.yellow, size: 14),
-                                            Icon(Icons.star, color: Colors.yellow, size: 14),
-                                            Icon(Icons.star, color: Colors.yellow, size: 14),
-                                            SizedBox(width: 4),
-                                            Text("5", style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            Icon(Icons.access_time, size: 14),
-                                            SizedBox(width: 4),
-                                            Text("08:00 - 21:00"),
-                                          ],
-                                        ),
-                                        SizedBox(height: 8),
+                                  final shops = state.categoryShops[i + 1];
+                                  if (shops == null || j >= shops.length) {
+                                    return SizedBox.shrink();
+                                  }
 
-                                        OutlinedButton(
-                                          onPressed: () => launchUrl(
-                                            Uri.parse(
-                                              "https://www.google.com/maps/dir/?api=1&destination=39.395661, 67.305775&travelmode=walking&dir_action=navigate",
-                                            ),
-                                          ),
-                                          style: OutlinedButton.styleFrom(
-                                            side: BorderSide(color: Colors.purple),
-                                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                                          ),
-                                          child: Text("Do'konga borish", style: TextStyle(color: Colors.purple)),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
+                                  final shop = shops[j];
+                                  return ShopItem(shop: shop);
+                                },
+                                childCount: state.status == HomeStatus.loading
+                                    ? 6
+                                    : state.categoryShops[i + 1]?.length ?? 0,
                               ),
                             ),
                           ),
-                        ),
+                          // Add extra space at bottom for better scroll experience
+                          SliverToBoxAdapter(child: SizedBox(height: 20)),
+                        ],
                       ),
                     ),
                   ),
@@ -295,8 +277,8 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

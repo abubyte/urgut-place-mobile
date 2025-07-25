@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:urgut_please/config/di/injection.dart';
 import 'package:urgut_please/core/errors/api_exception.dart';
+import 'package:urgut_please/core/services/token_service.dart';
 import 'package:urgut_please/core/utils/constants.dart';
 import 'package:urgut_please/shared/models/user/user_model.dart';
 import 'package:urgut_please/shared/services/api_service.dart';
@@ -10,11 +12,12 @@ abstract class AuthenticationService {
   Future<UserModel> register(UserCreateDto user);
   Future<void> sendVerification(String login);
   Future<void> verify(String login, String code);
-  Future<String> login(String login, String pasword);
+  Future<String> login(String login, String password);
   Future<void> resetPassword(String login, String newPassword, String verificationCode);
+  Future<void> logout();
 }
 
-class AuthenticationServiceImple implements AuthenticationService {
+class AuthenticationServiceImpl implements AuthenticationService {
   @override
   Future<UserModel> register(UserCreateDto user) async {
     try {
@@ -76,13 +79,16 @@ class AuthenticationServiceImple implements AuthenticationService {
       }
 
       // Login request
-      final response = await getIt<ApiService>().postRequest(
+      final response = await getIt<ApiService>().postFormDataRequest(
         ApiEndpoints.login,
-        data: {"login": login, "password": password},
+        formData: FormData.fromMap({"login": login, "password": password}),
       );
 
+      final token = response.data["access_token"];
+      await getIt<TokenService>().saveUser(token, login, password);
+
       // Return access token
-      return response.data["access_token"];
+      return token;
     } catch (e) {
       rethrow;
     }
@@ -102,6 +108,15 @@ class AuthenticationServiceImple implements AuthenticationService {
         ApiEndpoints.resetPassword,
         data: {"login": login, "new_password": newPassword, "verification_code": verificationCode},
       );
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> logout() async {
+    try {
+      getIt<TokenService>().deleteToken();
     } catch (e) {
       rethrow;
     }

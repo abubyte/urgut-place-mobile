@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:urgut_please/features/explore/views/home/home_screen.dart';
-import 'package:urgut_please/features/explore/views/shop/widgets/shop_screen.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:urgut_please/features/search/viewmodels/search/search_bloc.dart';
+import 'package:urgut_please/features/search/viewmodels/search/search_state.dart';
+import 'package:urgut_please/shared/widgets/shop_item.dart';
 
-class ItemsScreen extends StatelessWidget {
-  const ItemsScreen({super.key});
+class SearchScreen extends StatelessWidget {
+  const SearchScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final viewmodel = BlocProvider.of<SearchBloc>(context, listen: true);
+
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             children: [
               SizedBox(height: 16),
+
               // Search Bar
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16),
@@ -22,19 +26,51 @@ class ItemsScreen extends StatelessWidget {
                     Container(
                       width: MediaQuery.of(context).size.width - 32,
                       height: 43,
+                      padding: const EdgeInsets.only(left: 8.0, right: 8),
                       decoration: BoxDecoration(
                         color: Colors.grey.withAlpha((255 * 0.4).toInt()),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text("Qidirish", style: TextStyle(color: Colors.black38)),
-                            Icon(Icons.search, color: Colors.black38),
-                          ],
-                        ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Expanded(
+                            flex: 7,
+                            child: TextField(
+                              textInputAction: TextInputAction.search,
+                              controller: viewmodel.searchController,
+                              onSubmitted: (_) => viewmodel.search(),
+                              onChanged: (value) {
+                                if ((viewmodel.state.emptyQuery && value != '') ||
+                                    (!viewmodel.state.emptyQuery && value == '')) {
+                                  viewmodel.refresh();
+                                }
+                              },
+                              decoration: InputDecoration(
+                                hint: Container(
+                                  margin: EdgeInsets.only(bottom: 8),
+                                  child: Text("Qidirish", style: TextStyle(color: Colors.black38)),
+                                ),
+                                border: InputBorder.none,
+                              ),
+                            ),
+                          ),
+                          if (!viewmodel.state.emptyQuery)
+                            Expanded(
+                              flex: 1,
+                              child: IconButton(
+                                icon: Icon(Icons.close, color: Colors.black38, size: 24),
+                                onPressed: () => viewmodel.searchController.text = '',
+                              ),
+                            ),
+                          Expanded(
+                            flex: 1,
+                            child: IconButton(
+                              icon: Icon(Icons.search, color: Colors.black38, size: 24),
+                              onPressed: viewmodel.search,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -44,127 +80,44 @@ class ItemsScreen extends StatelessWidget {
 
               // Items
               SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: Padding(
-                  padding: EdgeInsets.all(12),
-                  child: GridView(
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 8,
-                      mainAxisSpacing: 8,
-                      childAspectRatio: .57,
-                    ),
-                    children: List.generate(
-                      10,
-                      (index) => GestureDetector(
-                        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ShopScreen())),
+                height: viewmodel.state.status != SearchStatus.success
+                    ? MediaQuery.of(context).size.height - 300
+                    : null,
+                child: BlocBuilder<SearchBloc, SearchState>(
+                  builder: (context, state) {
+                    if (state.status == SearchStatus.initial) {
+                      return Center(child: Text("Do'konlarni qidiring"));
+                    } else if (state.status == SearchStatus.empty) {
+                      return Center(child: Text("Bunaqa do'kon mavjud emas"));
+                    } else if (state.status == SearchStatus.loading) {
+                      return Center(child: CircularProgressIndicator());
+                    } else if (state.status == SearchStatus.success) {
+                      return SizedBox(
+                        width: MediaQuery.of(context).size.width,
                         child: Padding(
-                          padding: EdgeInsets.all(4),
-                          child: Container(
-                            // margin: EdgeInsets.symmetric(horizontal: 6),
-                            padding: EdgeInsets.all(6),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(12),
-                              boxShadow: [
-                                BoxShadow(
-                                  blurRadius: 4,
-                                  spreadRadius: 1,
-                                  color: Colors.black.withAlpha((255 * .08).toInt()),
-                                ),
-                              ],
+                          padding: EdgeInsets.all(12),
+                          child: GridView(
+                            scrollDirection: Axis.vertical,
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 8,
+                              mainAxisSpacing: 8,
+                              childAspectRatio: .57,
                             ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  flex: 4,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(12),
-                                      image: DecorationImage(image: NetworkImage(imageUrls[index]), fit: BoxFit.cover),
-                                    ),
-                                    child: Align(
-                                      alignment: Alignment.topRight,
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius: BorderRadius.circular(12),
-                                        ),
-                                        height: 35,
-                                        width: 35,
-                                        margin: EdgeInsets.only(top: 10, right: 10),
-                                        child: Center(
-                                          child: IconButton(
-                                            onPressed: () {},
-                                            icon: Icon(Icons.favorite_outline, size: 18),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 3,
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: List.generate(state.result!.length, (index) {
+                              final shop = state.result![index];
 
-                                    children: [
-                                      SizedBox(height: 6),
-                                      Text(
-                                        "Yulduz do'koni",
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                      SizedBox(height: 4),
-                                      Row(
-                                        children: [
-                                          Icon(Icons.star, color: Colors.yellow, size: 14),
-                                          Icon(Icons.star, color: Colors.yellow, size: 14),
-                                          Icon(Icons.star, color: Colors.yellow, size: 14),
-                                          Icon(Icons.star, color: Colors.yellow, size: 14),
-                                          Icon(Icons.star, color: Colors.yellow, size: 14),
-                                          SizedBox(width: 4),
-                                          Text("5", style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          Icon(Icons.access_time, size: 14),
-                                          SizedBox(width: 4),
-                                          Text("08:00 - 21:00"),
-                                        ],
-                                      ),
-                                      SizedBox(height: 8),
-
-                                      OutlinedButton(
-                                        onPressed: () => launchUrl(
-                                          Uri.parse(
-                                            "https://www.google.com/maps/dir/?api=1&destination=39.395661, 67.305775&travelmode=walking&dir_action=navigate",
-                                          ),
-                                        ),
-                                        style: OutlinedButton.styleFrom(
-                                          side: BorderSide(color: Colors.purple),
-                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                                        ),
-                                        child: Text("Do'konga borish", style: TextStyle(color: Colors.purple)),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
+                              return ShopItem(shop: shop);
+                            }),
                           ),
                         ),
-                      ),
-                    ),
-                  ),
+                      );
+                    } else {
+                      return Center(child: Text("Qidiruvni amalga oshirib bo'lmadi"));
+                    }
+                  },
                 ),
               ),
             ],

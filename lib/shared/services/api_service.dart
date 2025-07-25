@@ -1,4 +1,6 @@
 import 'package:dio/dio.dart';
+import 'package:urgut_please/config/di/injection.dart';
+import 'package:urgut_please/core/services/token_service.dart';
 import 'package:urgut_please/core/utils/dio_logger.dart';
 
 class ApiService {
@@ -21,7 +23,7 @@ class ApiService {
     /// Create Dio instance with Base Options
     _dio = Dio(
       BaseOptions(
-        // baseUrl: baseUrl,
+        baseUrl: baseUrl,
         connectTimeout: connectTimeout ?? const Duration(seconds: 30),
         receiveTimeout: receiveTimeout ?? const Duration(seconds: 30),
         // headers: defaultHeaders ?? {'Content-Type': 'x-www-form-urlencoded', 'Accept': 'application/json'},
@@ -34,17 +36,20 @@ class ApiService {
         onRequest:
             onRequest ??
             (options, handler) async {
-              handler.next(options);
+              final token = await getIt<TokenService>().getToken();
+              if (token != null) options.headers['Authorization'] = 'Bearer $token';
+
+              return handler.next(options);
             },
         onResponse:
             onResponse ??
             (response, handler) {
-              handler.next(response);
+              return handler.next(response);
             },
         onError:
             onError ??
             (DioException e, handler) {
-              handler.next(e);
+              return handler.next(e);
             },
       ),
 
@@ -61,7 +66,11 @@ class ApiService {
     int? id,
   }) async {
     try {
-      Response response = await _dio.get("$endpoint${id ?? ''}", queryParameters: queryParameters);
+      Response response = await _dio.get(
+        endpoint + ((id != null) ? '/$id' : ''),
+        data: data,
+        queryParameters: queryParameters,
+      );
       return response;
     } catch (e) {
       rethrow;
@@ -88,14 +97,9 @@ class ApiService {
   }
 
   // Delete Request
-  Future<Response> deleteRequest(
-    String endpoint,
-    int id, {
-    Object? data,
-    Map<String, dynamic>? queryParameters,
-  }) async {
+  Future<Response> deleteRequest(String endpoint, int id, {Object? data, Map<String, dynamic>? queryParameters}) async {
     try {
-      Response response = await _dio.delete(endpoint + id.toString(), data: data, queryParameters: queryParameters);
+      Response response = await _dio.delete('$endpoint/$id', data: data, queryParameters: queryParameters);
       return response;
     } catch (e) {
       rethrow;

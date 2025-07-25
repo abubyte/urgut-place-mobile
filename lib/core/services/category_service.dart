@@ -51,10 +51,8 @@ class CategoryServiceImpl implements CategoryService {
       final response = await getIt<ApiService>().getRequest(ApiEndpoints.categories);
 
       late final List<CategoryModel> categories;
-      late final List<Map<String, dynamic>> responseJson;
       if (response.data != null) {
-        responseJson = response.data;
-        categories = responseJson.map((e) => CategoryModel.fromJson(e)).toList();
+        categories = (response.data as List).map((e) => CategoryModel.fromJson(e)).toList();
       } else {
         throw ApiException("Categories are not available");
       }

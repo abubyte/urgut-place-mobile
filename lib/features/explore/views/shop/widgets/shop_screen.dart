@@ -1,9 +1,15 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:urgut_please/core/utils/extensions.dart';
+import 'package:urgut_please/shared/models/shop/shop_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ShopScreen extends StatelessWidget {
-  const ShopScreen({super.key});
+  final ShopModel shop;
+
+  const ShopScreen({super.key, required this.shop});
 
   @override
   Widget build(BuildContext context) {
@@ -13,57 +19,104 @@ class ShopScreen extends StatelessWidget {
           SliverAppBar(
             automaticallyImplyLeading: false,
             expandedHeight: 350,
-            flexibleSpace: CarouselSlider(
-              items: [
-                Container(
-                  // width: double.maxFinite,
-                  // height: 300,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: NetworkImage("https://picsum.photos/seed/12/450/450"),
-                      fit: BoxFit.cover,
+            flexibleSpace: FlexibleSpaceBar(
+              background: Stack(
+                children: [
+                  // Carousel with images
+                  Positioned.fill(
+                    child: CarouselSlider(
+                      items: shop.imageUrls.isNotEmpty
+                          ? shop.imageUrls.map((imageUrl) {
+                              return SizedBox(
+                                width: MediaQuery.of(context).size.width,
+                                child: CachedNetworkImage(
+                                  imageUrl: imageUrl,
+                                  width: double.infinity,
+                                  height: double.infinity,
+                                  fit: BoxFit.cover,
+                                  placeholder: (context, url) => Shimmer.fromColors(
+                                    baseColor: Colors.grey.shade300,
+                                    highlightColor: Colors.grey.shade100,
+                                    child: Container(
+                                      width: double.infinity,
+                                      height: double.infinity,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  errorWidget: (context, url, error) => Container(
+                                    width: double.infinity,
+                                    height: double.infinity,
+                                    color: Colors.grey.shade200,
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(Icons.store_outlined, size: 80, color: Colors.grey),
+                                        SizedBox(height: 16),
+                                        Text('Image not available', style: TextStyle(color: Colors.grey, fontSize: 16)),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }).toList()
+                          : [
+                              // Fallback when no images
+                              Container(
+                                width: MediaQuery.of(context).size.width,
+                                height: double.infinity,
+                                color: Colors.grey.shade200,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.store_outlined, size: 80, color: Colors.grey),
+                                    SizedBox(height: 16),
+                                    Text('No images available', style: TextStyle(color: Colors.grey, fontSize: 16)),
+                                  ],
+                                ),
+                              ),
+                            ],
+                      options: CarouselOptions(
+                        height: double.infinity,
+                        autoPlay: false,
+                        viewportFraction: 1.0,
+                        enableInfiniteScroll: shop.imageUrls.length > 1,
+                      ),
                     ),
                   ),
-                  child: Align(
-                    alignment: Alignment.topLeft,
+                  // Single back button positioned over the carousel
+                  Positioned(
+                    top: 50,
+                    left: 16,
                     child: Container(
-                      margin: EdgeInsets.only(left: 16, top: 50),
-                      child: IconButton(onPressed: () => Navigator.pop(context), icon: Icon(Icons.chevron_left)),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withAlpha((255 * 0.5).toInt()),
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      child: IconButton(
+                        onPressed: () => Navigator.pop(context),
+                        icon: Icon(Icons.chevron_left, color: Colors.white, size: 28),
+                      ),
                     ),
                   ),
-                ),
-                Container(
-                  width: double.maxFinite,
-                  height: 300,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: NetworkImage("https://picsum.photos/seed/13/450/450"),
-                      fit: BoxFit.cover,
+                  // Image counter
+                  if (shop.imageUrls.length > 1)
+                    Positioned(
+                      bottom: 16,
+                      right: 16,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withAlpha((255 * 0.6).toInt()),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Text(
+                          '${shop.imageUrls.length} ta rasm',
+                          style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w500),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                Container(
-                  width: double.maxFinite,
-                  height: 300,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: NetworkImage("https://picsum.photos/seed/14/450/450"),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                Container(
-                  width: double.maxFinite,
-                  height: 300,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: NetworkImage("https://picsum.photos/seed/15/450/450"),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-              ],
-              options: CarouselOptions(autoPlay: false, viewportFraction: 1, aspectRatio: 1),
+                ],
+              ),
             ),
           ),
           SliverToBoxAdapter(
@@ -72,56 +125,51 @@ class ShopScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // SizedBox(height: 6),
                   Text(
-                    "Yulduz do'koni",
+                    shop.name,
                     style: TextStyle(color: Colors.black, fontSize: 22, fontWeight: FontWeight.w600),
                   ),
                   SizedBox(height: 4),
-                  Row(
-                    children: [
-                      Icon(Icons.star, color: Colors.yellow, size: 20),
-                      Icon(Icons.star, color: Colors.yellow, size: 20),
-                      Icon(Icons.star, color: Colors.yellow, size: 20),
-                      Icon(Icons.star, color: Colors.yellow, size: 20),
-                      Icon(Icons.star, color: Colors.yellow, size: 20),
-                      SizedBox(width: 4),
-                      Text("5", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-                      SizedBox(width: 12),
-                      Text(
-                        "(857 ta sharh)",
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.grey),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 4),
+                  if (shop.rating > 0) ...[
+                    Row(
+                      children:
+                          List.generate(
+                            shop.rating.toInt(),
+                            (index) => Icon(Icons.star, color: Colors.yellow, size: 20),
+                          )..addAll([
+                            SizedBox(width: 4),
+                            Text(shop.rating.toString(), style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                            SizedBox(width: 12),
+                            Text(
+                              "(${shop.ratingCount} ta baho)",
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.grey),
+                            ),
+                          ]),
+                    ),
+                    SizedBox(height: 4),
+                  ],
                   Row(
                     children: [
                       Icon(Icons.access_time, size: 20, color: Colors.purple),
                       SizedBox(width: 4),
-                      Text("08:00 - 21:00", style: TextStyle(fontSize: 16)),
+                      Text(shop.workTime, style: TextStyle(fontSize: 16)),
                     ],
                   ),
                   SizedBox(height: 16),
 
-                  // Desc
+                  // Description
                   Text(
                     "Tavsif",
                     style: TextStyle(color: Colors.black, fontSize: 22, fontWeight: FontWeight.w600),
                   ),
                   SizedBox(height: 6),
                   Text(
-                    "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen  versions of Lorem Ipsum.",
+                    shop.description,
                     style: TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w400),
                   ),
                   SizedBox(height: 16),
 
-                  Text(
-                    "Sotuvchi",
-                    style: TextStyle(color: Colors.black, fontSize: 22, fontWeight: FontWeight.w600),
-                  ),
-                  SizedBox(height: 6),
-
+                  // Seller section
                   Container(
                     height: 70,
                     width: double.maxFinite,
@@ -141,11 +189,7 @@ class ShopScreen extends StatelessWidget {
                               height: 50,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(100),
-                                // border: Border.all(color: Colors.grey),
-                                image: DecorationImage(
-                                  image: NetworkImage("https://picsum.photos/60/60"),
-                                  fit: BoxFit.cover,
-                                ),
+                                image: DecorationImage(image: AssetImage("assets/icons/user.png"), fit: BoxFit.cover),
                               ),
                             ),
                             SizedBox(width: 16),
@@ -154,39 +198,28 @@ class ShopScreen extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "Aziz",
+                                  "Sotuvchi",
                                   style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.w700),
                                 ),
-                                Row(
-                                  children: [
-                                    Icon(Icons.star, color: Colors.yellow, size: 20),
-                                    Icon(Icons.star, color: Colors.yellow, size: 20),
-                                    Icon(Icons.star, color: Colors.yellow, size: 20),
-                                    Icon(Icons.star, color: Colors.yellow, size: 20),
-                                    Icon(Icons.star, color: Colors.yellow, size: 20),
-                                    SizedBox(width: 4),
-                                    Text("5", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-                                  ],
+                                Text(
+                                  shop.sellerPhone.formatPhone(),
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w700,
+                                    fontStyle: FontStyle.italic,
+                                  ),
                                 ),
                               ],
                             ),
                           ],
                         ),
                         GestureDetector(
-                          onTap: () => launchUrl(Uri.parse("tel:+998000000000")),
+                          onTap: () => launchUrl(Uri.parse("tel:${shop.sellerPhone}")),
                           child: Container(
                             margin: EdgeInsets.only(right: 8),
                             width: 45,
                             height: 45,
-                            decoration: BoxDecoration(
-                              color: Colors.purple,
-                              borderRadius: BorderRadius.circular(100),
-                              // border: Border.all(color: Colors.grey),
-                              // image: DecorationImage(
-                              //   image: NetworkImage("https://picsum.photos/seed/20/60/60"),
-                              //   fit: BoxFit.cover,
-                              // ),
-                            ),
+                            decoration: BoxDecoration(color: Colors.purple, borderRadius: BorderRadius.circular(100)),
                             child: Icon(Icons.call, color: Colors.white),
                           ),
                         ),
@@ -195,23 +228,31 @@ class ShopScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 16),
 
-                  Text("Urgut, Markaziy ko'cha 12", style: TextStyle(fontSize: 14)),
-                  SizedBox(height: 16),
+                  // Landmark
+                  if (shop.landmark.isNotEmpty) ...[
+                    Text(
+                      "Manzil",
+                      style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.w600),
+                    ),
+                    SizedBox(height: 4),
+                    Text(shop.landmark, style: TextStyle(fontSize: 14, color: Colors.grey.shade700)),
+                    SizedBox(height: 16),
+                  ],
 
+                  // Navigation button
                   GestureDetector(
                     onTap: () => launchUrl(
                       Uri.parse(
-                        "https://www.google.com/maps/dir/?api=1&destination=39.395661, 67.305775&travelmode=walking&dir_action=navigate",
+                        "https://www.google.com/maps/dir/?api=1&destination=${shop.latitude},${shop.longitude}&travelmode=walking&dir_action=navigate",
                       ),
                     ),
-                    // style: OutlinedButton.styleFrom(side: BorderSide(color: Colors.purple)),
                     child: Container(
                       height: 50,
                       decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Colors.purple),
                       child: Center(
                         child: Text(
                           "Do'konga borish",
-                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 16),
                         ),
                       ),
                     ),

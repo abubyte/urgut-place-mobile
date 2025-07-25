@@ -18,7 +18,7 @@ abstract class ShopService {
   });
 }
 
-class ShopServiceImple implements ShopService {
+class ShopServiceImpl implements ShopService {
   @override
   Future<ShopModel> getShop(int shopId) async {
     try {
@@ -64,14 +64,17 @@ class ShopServiceImple implements ShopService {
       // Get request
       final response = await getIt<ApiService>().getRequest(
         ApiEndpoints.shops,
-        data: {"category_id": categoryId, "search": search, "sort_by": sortBy?.name, "sort_order": sortOrder?.name},
+        queryParameters: {
+          if (categoryId != null) "category_id": categoryId,
+          if (search != null) "search": search,
+          if (sortBy != null) "sort_by": sortBy.name,
+          if (sortOrder != null) "sort_order": sortOrder.name,
+        },
       );
 
       late final List<ShopModel> shops;
-      late final List<Map<String, dynamic>> responseJson;
       if (response.data != null) {
-        responseJson = response.data;
-        shops = responseJson.map((e) => ShopModel.fromJson(e)).toList();
+        shops = (response.data as List).map((e) => ShopModel.fromJson(e)).toList();
       } else {
         throw ApiException("Shops are not available");
       }
