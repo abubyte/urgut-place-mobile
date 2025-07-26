@@ -28,10 +28,13 @@ class AuthenticationServiceImpl implements AuthenticationService {
       }
 
       // Create request
-      final response = await getIt<ApiService>().postRequest(ApiEndpoints.register, data: user.toJson());
+      final response = await getIt<ApiService>().postFormDataRequest(
+        ApiEndpoints.register,
+        formData: FormData.fromMap(user.toJson()),
+      );
 
       // Return user
-      return UserModel.fromJson(response.data);
+      return UserModel.fromJson(response.data["user"]);
     } catch (e) {
       rethrow;
     }
@@ -47,7 +50,10 @@ class AuthenticationServiceImpl implements AuthenticationService {
       }
 
       // Send verification request
-      await getIt<ApiService>().postRequest(ApiEndpoints.sendVerification, data: {"login": login});
+      await getIt<ApiService>().postFormDataRequest(
+        ApiEndpoints.sendVerification,
+        formData: FormData.fromMap({"login": login}),
+      );
     } catch (e) {
       rethrow;
     }
@@ -63,7 +69,10 @@ class AuthenticationServiceImpl implements AuthenticationService {
       }
 
       // Verify request
-      await getIt<ApiService>().postRequest(ApiEndpoints.verify, data: {"login": login, "code": code});
+      await getIt<ApiService>().postFormDataRequest(
+        ApiEndpoints.verify,
+        formData: FormData.fromMap({"login": login, "code": code}),
+      );
     } catch (e) {
       rethrow;
     }
@@ -89,6 +98,12 @@ class AuthenticationServiceImpl implements AuthenticationService {
 
       // Return access token
       return token;
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401) {
+        throw Exception("Login yoki parol noto'g'ri");
+      } else {
+        rethrow;
+      }
     } catch (e) {
       rethrow;
     }

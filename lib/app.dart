@@ -6,11 +6,14 @@ import 'package:urgut_please/core/services/authentication_service.dart';
 import 'package:urgut_please/core/services/category_service.dart';
 import 'package:urgut_please/core/services/like_service.dart';
 import 'package:urgut_please/core/services/shop_service.dart';
+import 'package:urgut_please/core/services/user_service.dart';
 import 'package:urgut_please/features/authentication/viewmodels/login/login_bloc.dart';
 import 'package:urgut_please/features/authentication/viewmodels/register/register_bloc.dart';
 import 'package:urgut_please/features/authentication/viewmodels/verify/verify_bloc.dart';
 import 'package:urgut_please/features/explore/viewmodels/home/home_bloc.dart';
 import 'package:urgut_please/features/explore/viewmodels/like/like_bloc.dart';
+import 'package:urgut_please/features/profile/viewmodels/profile/profile_bloc.dart';
+import 'package:urgut_please/features/profile/viewmodels/profile_update/profile_update_bloc.dart';
 import 'package:urgut_please/features/search/viewmodels/search/search_bloc.dart';
 
 class App extends StatelessWidget {
@@ -26,6 +29,8 @@ class App extends StatelessWidget {
         BlocProvider<HomeBloc>(create: (context) => HomeBloc(getIt<ShopService>(), getIt<CategoryService>())),
         BlocProvider<LikeBloc>(create: (context) => LikeBloc(getIt<LikeService>())),
         BlocProvider<SearchBloc>(create: (context) => SearchBloc(getIt<ShopService>())),
+        BlocProvider<ProfileBloc>(create: (context) => ProfileBloc(getIt<UserService>())),
+        BlocProvider<ProfileUpdateBloc>(create: (context) => ProfileUpdateBloc(getIt<UserService>())),
       ],
       child: MaterialApp.router(
         title: 'UrgutPlace',

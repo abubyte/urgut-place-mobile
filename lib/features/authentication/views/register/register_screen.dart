@@ -42,7 +42,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   child: Column(
                     children: [
                       // Space
-                      70.h,
+                      200.h,
 
                       // Register Form
                       RegisterForm(
@@ -53,6 +53,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         passwordController: _passwordController,
                         confirmPasswordController: _confirmPasswordController,
                       ),
+
                       12.h,
 
                       // Navigate Button
@@ -67,9 +68,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
               // Submit Button
               10.h,
-              BlocBuilder<RegisterBloc, RegisterState>(
-                builder: (context, state) {
-                  bool loading = state.status == RegisterStatus.loading;
+              BlocConsumer<RegisterBloc, RegisterState>(
+                listener: (context, state) {
                   if (state.status == RegisterStatus.success) {
                     ToastUi.showToast(message: "Hisob yaratildi!");
                     context.pushReplacement(
@@ -78,34 +78,34 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     );
                   } else if (state.status == RegisterStatus.failure) {
                     ToastUi.showError(message: state.errorMessage ?? "Hisob yaratib bo'lmadi");
-                  }
-
-                  if (state.status == RegisterStatus.loading) {
+                  } else if (state.status == RegisterStatus.loading) {
                     ToastUi.showToast(message: "Hisob yaratilmoqda...");
-                    return SubmitButton(onPressed: null, loading: true);
-                  } else {
-                    return SubmitButton(
-                      loading: loading,
-                      onPressed: loading
-                          ? null
-                          : () {
-                              if (_registerFormKey.currentState!.validate()) {
-                                context.read<RegisterBloc>().add(
-                                  RegisterRequested(
-                                    UserCreateDto(
-                                      firstname: _firstnameController.text.trim(),
-                                      lastname: _lastnameController.text.trim(),
-                                      login: _loginController.text.trim(),
-                                      password: _passwordController.text.trim(),
-                                    ),
-                                  ),
-                                );
-                              } else {
-                                ToastUi.showError(message: "Iltimos ma'lumotlarni to'liq kiriting");
-                              }
-                            },
-                    );
                   }
+                },
+                builder: (context, state) {
+                  bool loading = state.status == RegisterStatus.loading;
+
+                  return SubmitButton(
+                    loading: loading,
+                    onPressed: loading
+                        ? null
+                        : () {
+                            if (_registerFormKey.currentState!.validate()) {
+                              context.read<RegisterBloc>().add(
+                                RegisterRequested(
+                                  UserCreateDto(
+                                    firstname: _firstnameController.text.trim(),
+                                    lastname: _lastnameController.text.trim(),
+                                    login: _loginController.text.trim(),
+                                    password: _passwordController.text.trim(),
+                                  ),
+                                ),
+                              );
+                            } else {
+                              ToastUi.showError(message: "Iltimos ma'lumotlarni to'liq kiriting");
+                            }
+                          },
+                  );
                 },
               ),
               16.h,

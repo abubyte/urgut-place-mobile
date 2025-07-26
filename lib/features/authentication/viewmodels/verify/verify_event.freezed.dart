@@ -14,62 +14,30 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$VerifyEvent {
 
- String get login; String get verificationCode;
-/// Create a copy of VerifyEvent
-/// with the given fields replaced by the non-null parameter values.
-@JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-$VerifyEventCopyWith<VerifyEvent> get copyWith => _$VerifyEventCopyWithImpl<VerifyEvent>(this as VerifyEvent, _$identity);
+
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is VerifyEvent&&(identical(other.login, login) || other.login == login)&&(identical(other.verificationCode, verificationCode) || other.verificationCode == verificationCode));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is VerifyEvent);
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,login,verificationCode);
+int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'VerifyEvent(login: $login, verificationCode: $verificationCode)';
+  return 'VerifyEvent()';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $VerifyEventCopyWith<$Res>  {
-  factory $VerifyEventCopyWith(VerifyEvent value, $Res Function(VerifyEvent) _then) = _$VerifyEventCopyWithImpl;
-@useResult
-$Res call({
- String login, String verificationCode
-});
-
-
-
-
-}
-/// @nodoc
-class _$VerifyEventCopyWithImpl<$Res>
-    implements $VerifyEventCopyWith<$Res> {
-  _$VerifyEventCopyWithImpl(this._self, this._then);
-
-  final VerifyEvent _self;
-  final $Res Function(VerifyEvent) _then;
-
-/// Create a copy of VerifyEvent
-/// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? login = null,Object? verificationCode = null,}) {
-  return _then(_self.copyWith(
-login: null == login ? _self.login : login // ignore: cast_nullable_to_non_nullable
-as String,verificationCode: null == verificationCode ? _self.verificationCode : verificationCode // ignore: cast_nullable_to_non_nullable
-as String,
-  ));
-}
-
+class $VerifyEventCopyWith<$Res>  {
+$VerifyEventCopyWith(VerifyEvent _, $Res Function(VerifyEvent) __);
 }
 
 
@@ -87,11 +55,14 @@ extension VerifyEventPatterns on VerifyEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( VerifyRequested value)?  verifyRequested,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( SendVerificationRequested value)?  sendVerification,TResult Function( VerifyRequested value)?  verifyRequested,TResult Function( ResendTimerTick value)?  resendTimerTick,TResult Function( ResetTimer value)?  resetTimer,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
-case VerifyRequested() when verifyRequested != null:
-return verifyRequested(_that);case _:
+case SendVerificationRequested() when sendVerification != null:
+return sendVerification(_that);case VerifyRequested() when verifyRequested != null:
+return verifyRequested(_that);case ResendTimerTick() when resendTimerTick != null:
+return resendTimerTick(_that);case ResetTimer() when resetTimer != null:
+return resetTimer(_that);case _:
   return orElse();
 
 }
@@ -109,11 +80,14 @@ return verifyRequested(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( VerifyRequested value)  verifyRequested,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( SendVerificationRequested value)  sendVerification,required TResult Function( VerifyRequested value)  verifyRequested,required TResult Function( ResendTimerTick value)  resendTimerTick,required TResult Function( ResetTimer value)  resetTimer,}){
 final _that = this;
 switch (_that) {
-case VerifyRequested():
-return verifyRequested(_that);case _:
+case SendVerificationRequested():
+return sendVerification(_that);case VerifyRequested():
+return verifyRequested(_that);case ResendTimerTick():
+return resendTimerTick(_that);case ResetTimer():
+return resetTimer(_that);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -130,11 +104,14 @@ return verifyRequested(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( VerifyRequested value)?  verifyRequested,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( SendVerificationRequested value)?  sendVerification,TResult? Function( VerifyRequested value)?  verifyRequested,TResult? Function( ResendTimerTick value)?  resendTimerTick,TResult? Function( ResetTimer value)?  resetTimer,}){
 final _that = this;
 switch (_that) {
-case VerifyRequested() when verifyRequested != null:
-return verifyRequested(_that);case _:
+case SendVerificationRequested() when sendVerification != null:
+return sendVerification(_that);case VerifyRequested() when verifyRequested != null:
+return verifyRequested(_that);case ResendTimerTick() when resendTimerTick != null:
+return resendTimerTick(_that);case ResetTimer() when resetTimer != null:
+return resetTimer(_that);case _:
   return null;
 
 }
@@ -151,10 +128,13 @@ return verifyRequested(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String login,  String verificationCode)?  verifyRequested,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String login)?  sendVerification,TResult Function( String login,  String verificationCode)?  verifyRequested,TResult Function( int remainingSeconds)?  resendTimerTick,TResult Function()?  resetTimer,required TResult orElse(),}) {final _that = this;
 switch (_that) {
-case VerifyRequested() when verifyRequested != null:
-return verifyRequested(_that.login,_that.verificationCode);case _:
+case SendVerificationRequested() when sendVerification != null:
+return sendVerification(_that.login);case VerifyRequested() when verifyRequested != null:
+return verifyRequested(_that.login,_that.verificationCode);case ResendTimerTick() when resendTimerTick != null:
+return resendTimerTick(_that.remainingSeconds);case ResetTimer() when resetTimer != null:
+return resetTimer();case _:
   return orElse();
 
 }
@@ -172,10 +152,13 @@ return verifyRequested(_that.login,_that.verificationCode);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String login,  String verificationCode)  verifyRequested,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String login)  sendVerification,required TResult Function( String login,  String verificationCode)  verifyRequested,required TResult Function( int remainingSeconds)  resendTimerTick,required TResult Function()  resetTimer,}) {final _that = this;
 switch (_that) {
-case VerifyRequested():
-return verifyRequested(_that.login,_that.verificationCode);case _:
+case SendVerificationRequested():
+return sendVerification(_that.login);case VerifyRequested():
+return verifyRequested(_that.login,_that.verificationCode);case ResendTimerTick():
+return resendTimerTick(_that.remainingSeconds);case ResetTimer():
+return resetTimer();case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -192,10 +175,13 @@ return verifyRequested(_that.login,_that.verificationCode);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String login,  String verificationCode)?  verifyRequested,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String login)?  sendVerification,TResult? Function( String login,  String verificationCode)?  verifyRequested,TResult? Function( int remainingSeconds)?  resendTimerTick,TResult? Function()?  resetTimer,}) {final _that = this;
 switch (_that) {
-case VerifyRequested() when verifyRequested != null:
-return verifyRequested(_that.login,_that.verificationCode);case _:
+case SendVerificationRequested() when sendVerification != null:
+return sendVerification(_that.login);case VerifyRequested() when verifyRequested != null:
+return verifyRequested(_that.login,_that.verificationCode);case ResendTimerTick() when resendTimerTick != null:
+return resendTimerTick(_that.remainingSeconds);case ResetTimer() when resetTimer != null:
+return resetTimer();case _:
   return null;
 
 }
@@ -206,16 +192,82 @@ return verifyRequested(_that.login,_that.verificationCode);case _:
 /// @nodoc
 
 
+class SendVerificationRequested implements VerifyEvent {
+  const SendVerificationRequested(this.login);
+  
+
+ final  String login;
+
+/// Create a copy of VerifyEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$SendVerificationRequestedCopyWith<SendVerificationRequested> get copyWith => _$SendVerificationRequestedCopyWithImpl<SendVerificationRequested>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SendVerificationRequested&&(identical(other.login, login) || other.login == login));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,login);
+
+@override
+String toString() {
+  return 'VerifyEvent.sendVerification(login: $login)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $SendVerificationRequestedCopyWith<$Res> implements $VerifyEventCopyWith<$Res> {
+  factory $SendVerificationRequestedCopyWith(SendVerificationRequested value, $Res Function(SendVerificationRequested) _then) = _$SendVerificationRequestedCopyWithImpl;
+@useResult
+$Res call({
+ String login
+});
+
+
+
+
+}
+/// @nodoc
+class _$SendVerificationRequestedCopyWithImpl<$Res>
+    implements $SendVerificationRequestedCopyWith<$Res> {
+  _$SendVerificationRequestedCopyWithImpl(this._self, this._then);
+
+  final SendVerificationRequested _self;
+  final $Res Function(SendVerificationRequested) _then;
+
+/// Create a copy of VerifyEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? login = null,}) {
+  return _then(SendVerificationRequested(
+null == login ? _self.login : login // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
 class VerifyRequested implements VerifyEvent {
   const VerifyRequested(this.login, this.verificationCode);
   
 
-@override final  String login;
-@override final  String verificationCode;
+ final  String login;
+ final  String verificationCode;
 
 /// Create a copy of VerifyEvent
 /// with the given fields replaced by the non-null parameter values.
-@override @JsonKey(includeFromJson: false, includeToJson: false)
+@JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
 $VerifyRequestedCopyWith<VerifyRequested> get copyWith => _$VerifyRequestedCopyWithImpl<VerifyRequested>(this, _$identity);
 
@@ -241,7 +293,7 @@ String toString() {
 /// @nodoc
 abstract mixin class $VerifyRequestedCopyWith<$Res> implements $VerifyEventCopyWith<$Res> {
   factory $VerifyRequestedCopyWith(VerifyRequested value, $Res Function(VerifyRequested) _then) = _$VerifyRequestedCopyWithImpl;
-@override @useResult
+@useResult
 $Res call({
  String login, String verificationCode
 });
@@ -260,7 +312,7 @@ class _$VerifyRequestedCopyWithImpl<$Res>
 
 /// Create a copy of VerifyEvent
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? login = null,Object? verificationCode = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? login = null,Object? verificationCode = null,}) {
   return _then(VerifyRequested(
 null == login ? _self.login : login // ignore: cast_nullable_to_non_nullable
 as String,null == verificationCode ? _self.verificationCode : verificationCode // ignore: cast_nullable_to_non_nullable
@@ -270,5 +322,103 @@ as String,
 
 
 }
+
+/// @nodoc
+
+
+class ResendTimerTick implements VerifyEvent {
+  const ResendTimerTick(this.remainingSeconds);
+  
+
+ final  int remainingSeconds;
+
+/// Create a copy of VerifyEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$ResendTimerTickCopyWith<ResendTimerTick> get copyWith => _$ResendTimerTickCopyWithImpl<ResendTimerTick>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ResendTimerTick&&(identical(other.remainingSeconds, remainingSeconds) || other.remainingSeconds == remainingSeconds));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,remainingSeconds);
+
+@override
+String toString() {
+  return 'VerifyEvent.resendTimerTick(remainingSeconds: $remainingSeconds)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $ResendTimerTickCopyWith<$Res> implements $VerifyEventCopyWith<$Res> {
+  factory $ResendTimerTickCopyWith(ResendTimerTick value, $Res Function(ResendTimerTick) _then) = _$ResendTimerTickCopyWithImpl;
+@useResult
+$Res call({
+ int remainingSeconds
+});
+
+
+
+
+}
+/// @nodoc
+class _$ResendTimerTickCopyWithImpl<$Res>
+    implements $ResendTimerTickCopyWith<$Res> {
+  _$ResendTimerTickCopyWithImpl(this._self, this._then);
+
+  final ResendTimerTick _self;
+  final $Res Function(ResendTimerTick) _then;
+
+/// Create a copy of VerifyEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? remainingSeconds = null,}) {
+  return _then(ResendTimerTick(
+null == remainingSeconds ? _self.remainingSeconds : remainingSeconds // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class ResetTimer implements VerifyEvent {
+  const ResetTimer();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ResetTimer);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'VerifyEvent.resetTimer()';
+}
+
+
+}
+
+
+
 
 // dart format on

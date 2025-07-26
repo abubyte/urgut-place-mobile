@@ -52,7 +52,14 @@ class AppRouter {
       GoRoute(path: Routes.splash, builder: (context, state) => const SplashScreen()),
       GoRoute(path: Routes.login, builder: (context, state) => const LoginScreen()),
       GoRoute(path: Routes.register, builder: (context, state) => const RegisterScreen()),
-      GoRoute(path: Routes.verify, builder: (context, state) => const VerifyScreen()),
+      GoRoute(
+        path: Routes.verify,
+        builder: (context, state) => VerifyScreen(
+          login: (state.extra as Map<String, String>)["login"] ?? '',
+          password: (state.extra as Map<String, String>)["password"],
+          resetPassword: false,
+        ),
+      ),
     ],
   );
 }

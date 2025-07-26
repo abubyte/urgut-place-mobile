@@ -96,6 +96,16 @@ class ApiService {
     return await _dio.post(path, data: formData, queryParameters: queryParameters);
   }
 
+  // Post FormData Request
+  Future<Response> putFormDataRequest(
+    String path, {
+    required FormData? formData,
+    Map<String, dynamic>? queryParameters,
+    int? id,
+  }) async {
+    return await _dio.put(id != null ? '$path/$id' : path, data: formData, queryParameters: queryParameters);
+  }
+
   // Delete Request
   Future<Response> deleteRequest(String endpoint, int id, {Object? data, Map<String, dynamic>? queryParameters}) async {
     try {

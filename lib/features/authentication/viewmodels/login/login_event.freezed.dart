@@ -14,30 +14,62 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$LoginEvent {
 
-
+ String get login; String get password;
+/// Create a copy of LoginEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$LoginEventCopyWith<LoginEvent> get copyWith => _$LoginEventCopyWithImpl<LoginEvent>(this as LoginEvent, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LoginEvent);
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LoginEvent&&(identical(other.login, login) || other.login == login)&&(identical(other.password, password) || other.password == password));
 }
 
 
 @override
-int get hashCode => runtimeType.hashCode;
+int get hashCode => Object.hash(runtimeType,login,password);
 
 @override
 String toString() {
-  return 'LoginEvent()';
+  return 'LoginEvent(login: $login, password: $password)';
 }
 
 
 }
 
 /// @nodoc
-class $LoginEventCopyWith<$Res>  {
-$LoginEventCopyWith(LoginEvent _, $Res Function(LoginEvent) __);
+abstract mixin class $LoginEventCopyWith<$Res>  {
+  factory $LoginEventCopyWith(LoginEvent value, $Res Function(LoginEvent) _then) = _$LoginEventCopyWithImpl;
+@useResult
+$Res call({
+ String login, String password
+});
+
+
+
+
+}
+/// @nodoc
+class _$LoginEventCopyWithImpl<$Res>
+    implements $LoginEventCopyWith<$Res> {
+  _$LoginEventCopyWithImpl(this._self, this._then);
+
+  final LoginEvent _self;
+  final $Res Function(LoginEvent) _then;
+
+/// Create a copy of LoginEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? login = null,Object? password = null,}) {
+  return _then(_self.copyWith(
+login: null == login ? _self.login : login // ignore: cast_nullable_to_non_nullable
+as String,password: null == password ? _self.password : password // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
 }
 
 
@@ -55,12 +87,11 @@ extension LoginEventPatterns on LoginEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( LoginRequested value)?  loginRequested,TResult Function( LogoutRequested value)?  logoutRequested,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( LoginRequested value)?  loginRequested,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case LoginRequested() when loginRequested != null:
-return loginRequested(_that);case LogoutRequested() when logoutRequested != null:
-return logoutRequested(_that);case _:
+return loginRequested(_that);case _:
   return orElse();
 
 }
@@ -78,12 +109,11 @@ return logoutRequested(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( LoginRequested value)  loginRequested,required TResult Function( LogoutRequested value)  logoutRequested,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( LoginRequested value)  loginRequested,}){
 final _that = this;
 switch (_that) {
 case LoginRequested():
-return loginRequested(_that);case LogoutRequested():
-return logoutRequested(_that);case _:
+return loginRequested(_that);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -100,12 +130,11 @@ return logoutRequested(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( LoginRequested value)?  loginRequested,TResult? Function( LogoutRequested value)?  logoutRequested,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( LoginRequested value)?  loginRequested,}){
 final _that = this;
 switch (_that) {
 case LoginRequested() when loginRequested != null:
-return loginRequested(_that);case LogoutRequested() when logoutRequested != null:
-return logoutRequested(_that);case _:
+return loginRequested(_that);case _:
   return null;
 
 }
@@ -122,11 +151,10 @@ return logoutRequested(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String login,  String password)?  loginRequested,TResult Function()?  logoutRequested,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String login,  String password)?  loginRequested,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case LoginRequested() when loginRequested != null:
-return loginRequested(_that.login,_that.password);case LogoutRequested() when logoutRequested != null:
-return logoutRequested();case _:
+return loginRequested(_that.login,_that.password);case _:
   return orElse();
 
 }
@@ -144,11 +172,10 @@ return logoutRequested();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String login,  String password)  loginRequested,required TResult Function()  logoutRequested,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String login,  String password)  loginRequested,}) {final _that = this;
 switch (_that) {
 case LoginRequested():
-return loginRequested(_that.login,_that.password);case LogoutRequested():
-return logoutRequested();case _:
+return loginRequested(_that.login,_that.password);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -165,11 +192,10 @@ return logoutRequested();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String login,  String password)?  loginRequested,TResult? Function()?  logoutRequested,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String login,  String password)?  loginRequested,}) {final _that = this;
 switch (_that) {
 case LoginRequested() when loginRequested != null:
-return loginRequested(_that.login,_that.password);case LogoutRequested() when logoutRequested != null:
-return logoutRequested();case _:
+return loginRequested(_that.login,_that.password);case _:
   return null;
 
 }
@@ -184,12 +210,12 @@ class LoginRequested implements LoginEvent {
   const LoginRequested(this.login, this.password);
   
 
- final  String login;
- final  String password;
+@override final  String login;
+@override final  String password;
 
 /// Create a copy of LoginEvent
 /// with the given fields replaced by the non-null parameter values.
-@JsonKey(includeFromJson: false, includeToJson: false)
+@override @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
 $LoginRequestedCopyWith<LoginRequested> get copyWith => _$LoginRequestedCopyWithImpl<LoginRequested>(this, _$identity);
 
@@ -215,7 +241,7 @@ String toString() {
 /// @nodoc
 abstract mixin class $LoginRequestedCopyWith<$Res> implements $LoginEventCopyWith<$Res> {
   factory $LoginRequestedCopyWith(LoginRequested value, $Res Function(LoginRequested) _then) = _$LoginRequestedCopyWithImpl;
-@useResult
+@override @useResult
 $Res call({
  String login, String password
 });
@@ -234,7 +260,7 @@ class _$LoginRequestedCopyWithImpl<$Res>
 
 /// Create a copy of LoginEvent
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? login = null,Object? password = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? login = null,Object? password = null,}) {
   return _then(LoginRequested(
 null == login ? _self.login : login // ignore: cast_nullable_to_non_nullable
 as String,null == password ? _self.password : password // ignore: cast_nullable_to_non_nullable
@@ -244,37 +270,5 @@ as String,
 
 
 }
-
-/// @nodoc
-
-
-class LogoutRequested implements LoginEvent {
-  const LogoutRequested();
-  
-
-
-
-
-
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LogoutRequested);
-}
-
-
-@override
-int get hashCode => runtimeType.hashCode;
-
-@override
-String toString() {
-  return 'LoginEvent.logoutRequested()';
-}
-
-
-}
-
-
-
 
 // dart format on

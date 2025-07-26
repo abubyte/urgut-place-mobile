@@ -23,8 +23,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       await _authenticationService.login(event.login, event.password);
       emit(state.copyWith(status: LoginStatus.success));
     } catch (e) {
-      ToastUi.showError(message: e.toString());
-      emit(state.copyWith(status: LoginStatus.failure));
+      // ToastUi.showError(message: e.toString());
+      emit(state.copyWith(status: LoginStatus.failure, errorMessage: e.toString().substring(11)));
     }
   }
 

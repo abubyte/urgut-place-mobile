@@ -26,12 +26,6 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
   }
 
-  Future<void> _onRefresh() async {
-    context.read<HomeBloc>().add(FetchShopsRequested());
-    // Add a small delay to ensure the refresh indicator shows
-    await Future.delayed(Duration(milliseconds: 500));
-  }
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<HomeBloc, HomeState>(
@@ -47,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     SliverAppBar(
                       pinned: true,
                       floating: true,
-                      expandedHeight: 420,
+                      expandedHeight: 370,
                       automaticallyImplyLeading: false,
                       backgroundColor: Colors.white,
                       flexibleSpace: ListView(
@@ -194,20 +188,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ],
                           ),
                           SizedBox(height: 16),
-
-                          // Discount Button
-                          Container(
-                            margin: EdgeInsets.symmetric(horizontal: 16),
-                            width: double.maxFinite,
-                            height: 50,
-                            decoration: BoxDecoration(color: Colors.purple, borderRadius: BorderRadius.circular(12)),
-                            child: Center(
-                              child: Text(
-                                "30%",
-                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 24),
-                              ),
-                            ),
-                          ),
                         ],
                       ),
                       bottom: PreferredSize(
@@ -235,7 +215,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: List.generate(
                     state.status == HomeStatus.loading ? 4 : state.categories.length,
                     (i) => RefreshIndicator(
-                      onRefresh: _onRefresh,
+                      onRefresh: () async => context.read<HomeBloc>().add(FetchShopsRequested()),
                       child: CustomScrollView(
                         slivers: [
                           SliverPadding(
@@ -267,7 +247,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                           ),
-                          // Add extra space at bottom for better scroll experience
                           SliverToBoxAdapter(child: SizedBox(height: 20)),
                         ],
                       ),

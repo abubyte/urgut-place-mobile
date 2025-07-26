@@ -30,16 +30,20 @@ class RegisterForm extends StatelessWidget {
         children: [
           Row(
             children: [
-              AuthenticationInputField(
-                label: "Ism",
-                validator: TextValidator.validator,
-                controller: firstnameController,
+              Expanded(
+                child: AuthenticationInputField(
+                  label: "Ism",
+                  validator: TextValidator.validator,
+                  controller: firstnameController,
+                ),
               ),
               10.w,
-              AuthenticationInputField(
-                label: "Familya",
-                validator: TextValidator.validator,
-                controller: lastnameController,
+              Expanded(
+                child: AuthenticationInputField(
+                  label: "Familya",
+                  validator: TextValidator.validator,
+                  controller: lastnameController,
+                ),
               ),
             ],
           ),

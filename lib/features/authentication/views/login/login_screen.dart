@@ -32,12 +32,12 @@ class _LoginScreenState extends State<LoginScreen> {
               Expanded(
                 child: SingleChildScrollView(
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.max,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       // Space
-                      70.h,
+                      200.h,
 
                       // Login Form
                       LoginForm(
@@ -65,7 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ToastUi.showToast(message: "Hisobingizga muvoffaqiyatli kirildi!");
                     context.go(Routes.home);
                   } else if (state.status == LoginStatus.failure) {
-                    ToastUi.showError(message: "Hisobga kirib bo'lmadi");
+                    ToastUi.showError(message: state.errorMessage ?? "Hisobga kirib bo'lmadi");
                   }
                 },
                 builder: (context, state) {
