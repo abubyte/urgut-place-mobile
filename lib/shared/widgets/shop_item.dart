@@ -32,7 +32,6 @@ class ShopItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
-                flex: 4,
                 child: Container(
                   decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
                   child: Stack(
@@ -106,8 +105,9 @@ class ShopItem extends StatelessWidget {
                   ),
                 ),
               ),
-              Expanded(
-                flex: 3,
+              SizedBox(
+                height: 120,
+
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [

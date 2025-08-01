@@ -7,6 +7,7 @@ import 'package:urgut_please/features/profile/viewmodels/profile/profile_bloc.da
 import 'package:urgut_please/features/profile/viewmodels/profile/profile_event.dart';
 import 'package:urgut_please/features/profile/viewmodels/profile/profile_state.dart';
 import 'package:urgut_please/features/profile/views/profile/profile_update_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -17,9 +18,7 @@ class ProfileScreen extends StatelessWidget {
       body: SafeArea(
         child: BlocListener<ProfileBloc, ProfileState>(
           listener: (context, state) {
-            // Handle navigation after logout
             if (state.status == ProfileStatus.success && state.currentUser == null) {
-              // Use post frame callback to ensure navigation happens after build
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 context.go(Routes.login);
               });
@@ -90,41 +89,21 @@ class ProfileScreen extends StatelessWidget {
                         icon: Icons.message_outlined,
                         title: "Qo'llab quvvatlash",
                         onTap: () {
-                          ToastUi.showError(message: "Bu funksiya hali ishlab chiqish jarayonida");
-                        },
-                      ),
-                      _buildMenuItem(
-                        icon: Icons.dark_mode,
-                        title: "Qorong'u rejim",
-                        onTap: () {
-                          ToastUi.showError(message: "Bu funksiya hali ishlab chiqish jarayonida");
-                        },
-                      ),
-                      _buildMenuItem(
-                        icon: Icons.notifications,
-                        title: "Bildirishnomalar",
-                        onTap: () {
-                          ToastUi.showError(message: "Bu funksiya hali ishlab chiqish jarayonida");
-                        },
-                      ),
-                      _buildMenuItem(
-                        icon: Icons.person_2,
-                        title: "Admin paneli",
-                        textColor: Colors.purple,
-                        iconColor: Colors.purple,
-                        showBorder: false,
-                        onTap: () {
-                          ToastUi.showError(message: "Bu funksiya hali ishlab chiqish jarayonida");
+                          launchUrl(Uri.parse("https://t.me/MAdashev"));
                         },
                       ),
 
+                      _buildMenuItem(
+                        icon: Icons.notifications,
+                        title: "Bildirishnomalar",
+                        onTap: () => ToastUi.showError(message: "Bu funksiya hali ishlab chiqish jarayonida"),
+                        showBorder: false,
+                      ),
                       SizedBox(height: 50),
 
                       // Logout Button
                       GestureDetector(
-                        onTap: () {
-                          _showLogoutDialog(context);
-                        },
+                        onTap: () => _showLogoutDialog(context),
                         child: Container(
                           height: 50,
                           decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Colors.purple),

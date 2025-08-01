@@ -92,6 +92,8 @@ class SearchScreen extends StatelessWidget {
                     } else if (state.status == SearchStatus.loading) {
                       return Center(child: CircularProgressIndicator());
                     } else if (state.status == SearchStatus.success) {
+                      final itemWidth = (MediaQuery.of(context).size.width - 32) / 2;
+                      final itemHeight = itemWidth + 120;
                       return SizedBox(
                         width: MediaQuery.of(context).size.width,
                         child: Padding(
@@ -104,7 +106,7 @@ class SearchScreen extends StatelessWidget {
                               crossAxisCount: 2,
                               crossAxisSpacing: 8,
                               mainAxisSpacing: 8,
-                              childAspectRatio: .57,
+                              childAspectRatio: itemWidth / itemHeight,
                             ),
                             children: List.generate(state.result!.length, (index) {
                               final shop = state.result![index];
