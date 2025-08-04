@@ -1,7 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:urgut_please/config/di/injection.dart';
-import 'package:urgut_please/core/services/token_service.dart';
-import 'package:urgut_please/core/utils/dio_logger.dart';
+import 'package:urgut_place/core/utils/dio_logger.dart';
 
 class ApiService {
   // Constructor
@@ -26,7 +24,6 @@ class ApiService {
         baseUrl: baseUrl,
         connectTimeout: connectTimeout ?? const Duration(seconds: 30),
         receiveTimeout: receiveTimeout ?? const Duration(seconds: 30),
-        // headers: defaultHeaders ?? {'Content-Type': 'x-www-form-urlencoded', 'Accept': 'application/json'},
       ),
     );
 
@@ -36,9 +33,6 @@ class ApiService {
         onRequest:
             onRequest ??
             (options, handler) async {
-              final token = await getIt<TokenService>().getToken();
-              if (token != null) options.headers['Authorization'] = 'Bearer $token';
-
               return handler.next(options);
             },
         onResponse:

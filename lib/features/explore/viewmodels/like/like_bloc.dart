@@ -1,12 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:urgut_please/config/di/injection.dart';
-import 'package:urgut_please/core/services/like_service.dart';
-import 'package:urgut_please/core/services/shop_service.dart';
-import 'package:urgut_please/core/utils/snackbar.dart';
-import 'package:urgut_please/features/explore/models/like/like_model.dart';
-import 'package:urgut_please/features/explore/viewmodels/like/like_event.dart';
-import 'package:urgut_please/features/explore/viewmodels/like/like_state.dart';
-import 'package:urgut_please/shared/models/shop/shop_model.dart';
+import 'package:urgut_place/config/di/injection.dart';
+import 'package:urgut_place/core/services/like_service.dart';
+import 'package:urgut_place/core/services/shop_service.dart';
+import 'package:urgut_place/core/utils/snackbar.dart';
+import 'package:urgut_place/features/explore/models/like/like_model.dart';
+import 'package:urgut_place/features/explore/viewmodels/like/like_event.dart';
+import 'package:urgut_place/features/explore/viewmodels/like/like_state.dart';
+import 'package:urgut_place/shared/models/shop/shop_model.dart';
 
 class LikeBloc extends Bloc<LikeEvent, LikeState> {
   final LikeService _likeService;

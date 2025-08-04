@@ -1,4 +1,4 @@
-import 'package:urgut_please/core/utils/utils.dart';
+import 'package:urgut_place/core/utils/utils.dart';
 
 abstract class Validators extends Utils {}
 

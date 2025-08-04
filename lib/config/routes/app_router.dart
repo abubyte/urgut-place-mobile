@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:urgut_please/config/routes/routes.dart';
-import 'package:urgut_please/features/authentication/views/login/login_screen.dart';
-import 'package:urgut_please/features/authentication/views/register/register_screen.dart';
-import 'package:urgut_please/features/authentication/views/verify/verify_screen.dart';
-import 'package:urgut_please/features/explore/views/home/home_screen.dart';
-import 'package:urgut_please/features/explore/views/home/navigation_screen.dart';
-import 'package:urgut_please/features/explore/views/like/like_screen.dart';
-import 'package:urgut_please/features/explore/views/shop/widgets/shop_screen.dart';
-import 'package:urgut_please/features/profile/views/profile/profile_screen.dart';
-import 'package:urgut_please/features/search/views/search/search_screen.dart';
-import 'package:urgut_please/features/splash/views/splash_screen.dart';
-import 'package:urgut_please/shared/models/shop/shop_model.dart';
+import 'package:urgut_place/config/routes/routes.dart';
+import 'package:urgut_place/features/explore/views/home/home_screen.dart';
+import 'package:urgut_place/features/explore/views/like/like_screen.dart';
+import 'package:urgut_place/features/explore/views/shop/shop_screen.dart';
+import 'package:urgut_place/features/search/views/search/search_screen.dart';
+import 'package:urgut_place/features/splash/views/splash_screen.dart';
+import 'package:urgut_place/shared/models/shop/shop_model.dart';
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
 final GlobalKey<NavigatorState> sectionNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'sectionANav');
@@ -23,42 +18,18 @@ class AppRouter {
     initialLocation: Routes.splash,
 
     routes: [
-      StatefulShellRoute.indexedStack(
-        builder: (context, state, navigationShell) => NavigationScreen(navigationShell: navigationShell),
-        branches: [
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                path: Routes.home,
-                builder: (context, state) => const HomeScreen(),
-                routes: [
-                  GoRoute(path: Routes.like, builder: (context, state) => LikeScreen()),
-                  GoRoute(
-                    path: Routes.shop,
-                    builder: (context, state) => ShopScreen(shop: state.extra as ShopModel? ?? ShopModel.empty()),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          StatefulShellBranch(
-            routes: [GoRoute(path: Routes.search, builder: (context, state) => SearchScreen())],
-          ),
-          StatefulShellBranch(
-            routes: [GoRoute(path: Routes.profile, builder: (context, state) => const ProfileScreen())],
+      GoRoute(path: Routes.splash, builder: (context, state) => const SplashScreen()),
+      GoRoute(
+        path: Routes.home,
+        builder: (context, state) => const HomeScreen(),
+        routes: [
+          GoRoute(path: Routes.search, builder: (context, state) => SearchScreen()),
+          GoRoute(path: Routes.like, builder: (context, state) => LikeScreen()),
+          GoRoute(
+            path: Routes.shop,
+            builder: (context, state) => ShopScreen(shop: state.extra as ShopModel? ?? ShopModel.empty()),
           ),
         ],
-      ),
-      GoRoute(path: Routes.splash, builder: (context, state) => const SplashScreen()),
-      GoRoute(path: Routes.login, builder: (context, state) => const LoginScreen()),
-      GoRoute(path: Routes.register, builder: (context, state) => const RegisterScreen()),
-      GoRoute(
-        path: Routes.verify,
-        builder: (context, state) => VerifyScreen(
-          login: (state.extra as Map<String, String>)["login"] ?? '',
-          password: (state.extra as Map<String, String>)["password"],
-          resetPassword: false,
-        ),
       ),
     ],
   );

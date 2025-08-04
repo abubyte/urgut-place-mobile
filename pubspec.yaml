@@ -1,5 +1,5 @@
-name: urgut_please
-description: "A new Flutter project."
+name: urgut_place
+description: "Shop finding App."
 publish_to: 'none'
 version: 1.0.0+1
 environment:

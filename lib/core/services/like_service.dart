@@ -1,10 +1,10 @@
 import 'dart:io';
 
-import 'package:urgut_please/config/di/injection.dart';
-import 'package:urgut_please/core/errors/api_exception.dart';
-import 'package:urgut_please/core/utils/constants.dart';
-import 'package:urgut_please/features/explore/models/like/like_model.dart';
-import 'package:urgut_please/shared/services/api_service.dart';
+import 'package:urgut_place/config/di/injection.dart';
+import 'package:urgut_place/core/errors/api_exception.dart';
+import 'package:urgut_place/core/utils/constants.dart';
+import 'package:urgut_place/features/explore/models/like/like_model.dart';
+import 'package:urgut_place/shared/services/api_service.dart';
 
 abstract class LikeService {
   Future<List<LikeModel>> getLikes();

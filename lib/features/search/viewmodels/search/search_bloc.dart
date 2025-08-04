@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:urgut_please/core/services/shop_service.dart';
-import 'package:urgut_please/core/utils/snackbar.dart';
-import 'package:urgut_please/features/search/viewmodels/search/search_event.dart';
-import 'package:urgut_please/features/search/viewmodels/search/search_state.dart';
+import 'package:urgut_place/core/services/shop_service.dart';
+import 'package:urgut_place/core/utils/snackbar.dart';
+import 'package:urgut_place/features/search/viewmodels/search/search_event.dart';
+import 'package:urgut_place/features/search/viewmodels/search/search_state.dart';
 
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
   final ShopService _shopService;

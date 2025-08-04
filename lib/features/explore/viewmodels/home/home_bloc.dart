@@ -1,10 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:urgut_please/core/services/category_service.dart';
-import 'package:urgut_please/core/services/shop_service.dart';
-import 'package:urgut_please/core/utils/snackbar.dart';
-import 'package:urgut_please/features/explore/viewmodels/home/home_event.dart';
-import 'package:urgut_please/features/explore/viewmodels/home/home_state.dart';
-import 'package:urgut_please/shared/models/shop/shop_model.dart';
+import 'package:urgut_place/core/services/category_service.dart';
+import 'package:urgut_place/core/services/shop_service.dart';
+import 'package:urgut_place/core/utils/snackbar.dart';
+import 'package:urgut_place/features/explore/viewmodels/home/home_event.dart';
+import 'package:urgut_place/features/explore/viewmodels/home/home_state.dart';
+import 'package:urgut_place/shared/models/shop/shop_model.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final ShopService _shopService;

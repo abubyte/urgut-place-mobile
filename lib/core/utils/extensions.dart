@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:urgut_please/core/utils/formatters.dart';
+import 'package:urgut_place/core/utils/formatters.dart';
 
 extension FormatExtension on String {
   String formatPhone() {

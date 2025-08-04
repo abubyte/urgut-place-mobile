@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:urgut_please/core/utils/extensions.dart';
+import 'package:urgut_place/core/utils/extensions.dart';
 
 class SubmitButton extends StatelessWidget {
   const SubmitButton({super.key, this.label, required this.onPressed, this.loading = false});

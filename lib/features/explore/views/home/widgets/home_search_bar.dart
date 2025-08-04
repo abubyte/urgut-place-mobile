@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:urgut_please/config/routes/routes.dart';
-import 'package:urgut_please/features/explore/viewmodels/like/like_bloc.dart';
-import 'package:urgut_please/features/explore/viewmodels/like/like_event.dart';
+import 'package:urgut_place/config/routes/routes.dart';
+import 'package:urgut_place/features/explore/viewmodels/like/like_bloc.dart';
+import 'package:urgut_place/features/explore/viewmodels/like/like_event.dart';
 
 class HomeSearchBar extends StatelessWidget {
   const HomeSearchBar({super.key});

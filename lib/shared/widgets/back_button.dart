@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:icons_flutter/icons_flutter.dart';
-import 'package:urgut_please/core/utils/extensions.dart';
+import 'package:urgut_place/core/utils/extensions.dart';
 
 class ADBackButton extends StatelessWidget {
   const ADBackButton({super.key});

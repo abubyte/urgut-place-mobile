@@ -3,8 +3,8 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:urgut_please/config/routes/routes.dart';
-import 'package:urgut_please/features/explore/viewmodels/home/home_state.dart';
+import 'package:urgut_place/config/routes/routes.dart';
+import 'package:urgut_place/features/explore/viewmodels/home/home_state.dart';
 
 class HomeFeaturedCarousel extends StatelessWidget {
   final HomeState state;

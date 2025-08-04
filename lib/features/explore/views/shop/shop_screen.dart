@@ -2,8 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:urgut_please/core/utils/extensions.dart';
-import 'package:urgut_please/shared/models/shop/shop_model.dart';
+import 'package:urgut_place/core/utils/extensions.dart';
+import 'package:urgut_place/shared/models/shop/shop_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ShopScreen extends StatelessWidget {

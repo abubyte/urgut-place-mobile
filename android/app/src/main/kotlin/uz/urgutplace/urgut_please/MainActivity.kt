@@ -1,4 +1,4 @@
-package uz.urgutplease.urgut_please
+package uz.urgutplace.urgut_place
 
 import io.flutter.embedding.android.FlutterActivity
 

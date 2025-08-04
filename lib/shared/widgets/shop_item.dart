@@ -2,11 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:urgut_please/core/utils/extensions.dart';
-import 'package:urgut_please/features/explore/viewmodels/like/like_bloc.dart';
-import 'package:urgut_please/features/explore/viewmodels/like/like_event.dart';
-import 'package:urgut_please/features/explore/views/shop/widgets/shop_screen.dart';
-import 'package:urgut_please/shared/models/shop/shop_model.dart';
+import 'package:urgut_place/core/utils/extensions.dart';
+import 'package:urgut_place/features/explore/viewmodels/like/like_bloc.dart';
+import 'package:urgut_place/features/explore/viewmodels/like/like_event.dart';
+import 'package:urgut_place/features/explore/views/shop/shop_screen.dart';
+import 'package:urgut_place/shared/models/shop/shop_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ShopItem extends StatelessWidget {

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:urgut_please/features/explore/viewmodels/home/home_bloc.dart';
-import 'package:urgut_please/features/explore/viewmodels/home/home_event.dart';
-import 'package:urgut_please/features/explore/viewmodels/home/home_state.dart';
-import 'package:urgut_please/features/explore/views/home/widgets/home_featured_carousel.dart';
-import 'package:urgut_please/features/explore/views/home/widgets/home_search_bar.dart';
-import 'package:urgut_please/shared/widgets/shop_item.dart';
-import 'package:urgut_please/shared/widgets/shop_item_shimmer.dart';
+import 'package:urgut_place/features/explore/viewmodels/home/home_bloc.dart';
+import 'package:urgut_place/features/explore/viewmodels/home/home_event.dart';
+import 'package:urgut_place/features/explore/viewmodels/home/home_state.dart';
+import 'package:urgut_place/features/explore/views/home/widgets/home_featured_carousel.dart';
+import 'package:urgut_place/features/explore/views/home/widgets/home_search_bar.dart';
+import 'package:urgut_place/shared/widgets/shop_item.dart';
+import 'package:urgut_place/shared/widgets/shop_item_shimmer.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -125,7 +125,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         if (i == 0) {
                                           // First tab - count all items
                                           return state.categoryShops.values
-                                              .map((shops) => shops.length ?? 0)
+                                              .map((shops) => shops.length)
                                               .fold(0, (sum, count) => sum + count);
                                         } else {
                                           // Other tabs - count items in specific category

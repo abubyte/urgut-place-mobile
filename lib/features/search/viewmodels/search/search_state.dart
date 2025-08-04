@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:urgut_please/shared/models/shop/shop_model.dart';
+import 'package:urgut_place/shared/models/shop/shop_model.dart';
 
 part 'search_state.freezed.dart';
 

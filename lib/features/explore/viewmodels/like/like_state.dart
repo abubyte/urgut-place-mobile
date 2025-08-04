@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:urgut_please/features/explore/models/like/like_model.dart';
-import 'package:urgut_please/shared/models/shop/shop_model.dart';
+import 'package:urgut_place/features/explore/models/like/like_model.dart';
+import 'package:urgut_place/shared/models/shop/shop_model.dart';
 
 part 'like_state.freezed.dart';
 
