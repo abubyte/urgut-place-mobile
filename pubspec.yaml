@@ -1,50 +1,41 @@
-name: urgut_place
-description: "Shop finding App."
+name: shops
+description: "A new Flutter project."
 publish_to: 'none'
-version: 1.0.0+1
+version: 1.0.1+3
+
 environment:
-  sdk: ^3.8.1
+  sdk: ^3.9.2
 
 dependencies:
   flutter:
     sdk: flutter
-
-  cupertino_icons: ^1.0.8
-  carousel_slider: ^5.1.1
-  url_launcher: ^6.3.2
-  flutter_launcher_icons: ^0.14.4
-  fluttertoast: ^8.2.12
-  mask_text_input_formatter: ^2.9.0
-  get_it: ^8.0.3
-  shared_preferences: ^2.5.3
-  go_router: ^16.0.0
-  dio: ^5.8.0+1
-  icons_flutter: ^0.0.5
   bloc: ^9.0.0
-  flutter_bloc: ^9.1.1
-  freezed_annotation: ^3.1.0
+  dio: ^5.9.0
+  freezed: ^3.2.3
   json_annotation: ^4.9.0
-  stream_transform: ^2.1.1
-  cached_network_image: ^3.4.1
-  flutter_secure_storage: ^9.2.4
-  jwt_decode: ^0.3.1
-  jwt_decoder: ^2.0.1
+  get_it: ^8.2.0
+  flutter_bloc: ^9.1.1
+  shared_preferences: ^2.5.3
+  go_router: ^16.2.1
+  connectivity_plus: ^7.0.0
+  mask_text_input_formatter: ^2.9.0
+  fluttertoast: ^8.2.12
+  freezed_annotation: ^3.1.0
+  icons_flutter: ^0.0.5
   shimmer: ^3.0.0
-  image_picker: ^1.1.2
+  cached_network_image: ^3.4.1
+  url_launcher: ^6.3.2
+  carousel_slider: ^5.1.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
   flutter_lints: ^5.0.0
-  freezed: ^3.1.0
-  json_serializable: ^6.9.5
-  build_runner: ^2.5.4
+  build_runner: ^2.8.0
+  json_serializable: ^6.11.1
+  flutter_launcher_icons: ^0.14.4
 
 flutter:
   uses-material-design: true
-
   assets:
-    - assets/icons/
-    - assets/images/
- 
+    - assets/

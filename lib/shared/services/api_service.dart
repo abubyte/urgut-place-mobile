@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:urgut_place/core/utils/dio_logger.dart';
+import 'package:shops/core/utils/dio_logger.dart';
 
 class ApiService {
   // Constructor

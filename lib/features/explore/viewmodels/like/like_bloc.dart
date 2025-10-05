@@ -1,12 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:urgut_place/config/di/injection.dart';
-import 'package:urgut_place/core/services/like_service.dart';
-import 'package:urgut_place/core/services/shop_service.dart';
-import 'package:urgut_place/core/utils/snackbar.dart';
-import 'package:urgut_place/features/explore/models/like/like_model.dart';
-import 'package:urgut_place/features/explore/viewmodels/like/like_event.dart';
-import 'package:urgut_place/features/explore/viewmodels/like/like_state.dart';
-import 'package:urgut_place/shared/models/shop/shop_model.dart';
+import 'package:shops/config/di.dart';
+import 'package:shops/core/services/like_service.dart';
+import 'package:shops/core/services/shop_service.dart';
+import 'package:shops/core/utils/snackbar.dart';
+import 'package:shops/features/explore/viewmodels/like/like_event.dart';
+import 'package:shops/features/explore/viewmodels/like/like_state.dart';
 
 class LikeBloc extends Bloc<LikeEvent, LikeState> {
   final LikeService _likeService;
@@ -22,21 +20,15 @@ class LikeBloc extends Bloc<LikeEvent, LikeState> {
   Future<void> _onGetLikes(GetLikes event, Emitter<LikeState> emit) async {
     emit(state.copyWith(status: LikeStatus.loading));
     try {
-      final shops = await getIt<ShopService>().getShops();
-      final likes = await _likeService.getLikes();
-      final shopIds = likes.map((like) => like.shopId).toList();
+      final shops = await getIt<ShopService>().getShops(limit: 100, skip: 0);
+      final likedShopIds = await _likeService.getLikes();
 
-      if (likes.isEmpty) {
-        emit(state.copyWith(status: LikeStatus.empty, likedShops: [], likes: [], shopIds: []));
+      final likedShops = shops.where((shop) => likedShopIds.contains(shop.id.toString())).toList();
+
+      if (likedShopIds.isEmpty) {
+        emit(state.copyWith(status: LikeStatus.empty, likedShops: [], shopIds: []));
       } else {
-        emit(
-          state.copyWith(
-            status: LikeStatus.success,
-            likedShops: shops.where((shop) => shopIds.contains(shop.id)).toList(),
-            likes: likes,
-            shopIds: shopIds,
-          ),
-        );
+        emit(state.copyWith(status: LikeStatus.success, likedShops: likedShops, shopIds: likedShopIds));
       }
     } catch (e) {
       ToastUi.showError(message: e.toString());
@@ -48,13 +40,13 @@ class LikeBloc extends Bloc<LikeEvent, LikeState> {
     emit(state.copyWith(status: LikeStatus.loading));
 
     try {
-      final like = await _likeService.createLike(event.shopId);
-      final newLikes = state.likes + [like];
-      final newShopIds = state.shopIds + [like.shopId];
-      final shop = await getIt<ShopService>().getShop(like.shopId);
+      await _likeService.createLike(event.shopId);
+      final newShopIds = state.shopIds + [event.shopId.toString()];
+
+      final shop = await getIt<ShopService>().getShop(event.shopId);
       final newLikedShops = state.likedShops + [shop];
 
-      emit(state.copyWith(status: LikeStatus.success, likes: newLikes, shopIds: newShopIds, likedShops: newLikedShops));
+      emit(state.copyWith(status: LikeStatus.success, shopIds: newShopIds, likedShops: newLikedShops));
     } catch (e) {
       ToastUi.showError(message: e.toString());
       emit(state.copyWith(status: LikeStatus.failure));
@@ -65,26 +57,12 @@ class LikeBloc extends Bloc<LikeEvent, LikeState> {
     emit(state.copyWith(status: LikeStatus.loading));
 
     try {
-      final likeId = state.likes.where((like) => like.shopId == event.shopId).first.id;
-      await _likeService.deleteLike(likeId);
+      await _likeService.deleteLike(event.shopId.toString());
 
-      List<ShopModel> newLikedShops = List.from(state.likedShops);
-      newLikedShops.removeWhere((shop) => shop.id == event.shopId);
+      final newLikedShops = state.likedShops.where((shop) => shop.id != event.shopId).toList();
+      final newShopIds = state.shopIds.where((id) => id != event.shopId.toString()).toList();
 
-      List<LikeModel> newLikes = List.from(state.likes);
-      newLikes.removeWhere((like) => like.shopId == event.shopId);
-
-      List<int> newShopIds = List.from(state.shopIds);
-      newShopIds.removeWhere((id) => id == event.shopId);
-
-      emit(
-        state.copyWith(
-          status: LikeStatus.success,
-          likedShops: state.likedShops,
-          likes: state.likes,
-          shopIds: state.shopIds,
-        ),
-      );
+      emit(state.copyWith(status: LikeStatus.success, likedShops: newLikedShops, shopIds: newShopIds));
     } catch (e) {
       ToastUi.showError(message: e.toString());
       emit(state.copyWith(status: LikeStatus.failure));

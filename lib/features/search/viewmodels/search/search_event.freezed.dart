@@ -55,12 +55,13 @@ extension SearchEventPatterns on SearchEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( SearchRequested value)?  searchRequested,TResult Function( RefreshRequested value)?  refreshRequested,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( SearchRequested value)?  searchRequested,TResult Function( RefreshRequested value)?  refreshRequested,TResult Function( LoadMoreRequested value)?  loadMoreRequested,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case SearchRequested() when searchRequested != null:
 return searchRequested(_that);case RefreshRequested() when refreshRequested != null:
-return refreshRequested(_that);case _:
+return refreshRequested(_that);case LoadMoreRequested() when loadMoreRequested != null:
+return loadMoreRequested(_that);case _:
   return orElse();
 
 }
@@ -78,12 +79,13 @@ return refreshRequested(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( SearchRequested value)  searchRequested,required TResult Function( RefreshRequested value)  refreshRequested,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( SearchRequested value)  searchRequested,required TResult Function( RefreshRequested value)  refreshRequested,required TResult Function( LoadMoreRequested value)  loadMoreRequested,}){
 final _that = this;
 switch (_that) {
 case SearchRequested():
 return searchRequested(_that);case RefreshRequested():
-return refreshRequested(_that);case _:
+return refreshRequested(_that);case LoadMoreRequested():
+return loadMoreRequested(_that);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -100,12 +102,13 @@ return refreshRequested(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( SearchRequested value)?  searchRequested,TResult? Function( RefreshRequested value)?  refreshRequested,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( SearchRequested value)?  searchRequested,TResult? Function( RefreshRequested value)?  refreshRequested,TResult? Function( LoadMoreRequested value)?  loadMoreRequested,}){
 final _that = this;
 switch (_that) {
 case SearchRequested() when searchRequested != null:
 return searchRequested(_that);case RefreshRequested() when refreshRequested != null:
-return refreshRequested(_that);case _:
+return refreshRequested(_that);case LoadMoreRequested() when loadMoreRequested != null:
+return loadMoreRequested(_that);case _:
   return null;
 
 }
@@ -122,11 +125,12 @@ return refreshRequested(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String? query)?  searchRequested,TResult Function()?  refreshRequested,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String? query)?  searchRequested,TResult Function()?  refreshRequested,TResult Function( int limit)?  loadMoreRequested,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case SearchRequested() when searchRequested != null:
 return searchRequested(_that.query);case RefreshRequested() when refreshRequested != null:
-return refreshRequested();case _:
+return refreshRequested();case LoadMoreRequested() when loadMoreRequested != null:
+return loadMoreRequested(_that.limit);case _:
   return orElse();
 
 }
@@ -144,11 +148,12 @@ return refreshRequested();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String? query)  searchRequested,required TResult Function()  refreshRequested,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String? query)  searchRequested,required TResult Function()  refreshRequested,required TResult Function( int limit)  loadMoreRequested,}) {final _that = this;
 switch (_that) {
 case SearchRequested():
 return searchRequested(_that.query);case RefreshRequested():
-return refreshRequested();case _:
+return refreshRequested();case LoadMoreRequested():
+return loadMoreRequested(_that.limit);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -165,11 +170,12 @@ return refreshRequested();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String? query)?  searchRequested,TResult? Function()?  refreshRequested,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String? query)?  searchRequested,TResult? Function()?  refreshRequested,TResult? Function( int limit)?  loadMoreRequested,}) {final _that = this;
 switch (_that) {
 case SearchRequested() when searchRequested != null:
 return searchRequested(_that.query);case RefreshRequested() when refreshRequested != null:
-return refreshRequested();case _:
+return refreshRequested();case LoadMoreRequested() when loadMoreRequested != null:
+return loadMoreRequested(_that.limit);case _:
   return null;
 
 }
@@ -274,5 +280,71 @@ String toString() {
 
 
 
+
+/// @nodoc
+
+
+class LoadMoreRequested implements SearchEvent {
+  const LoadMoreRequested({this.limit = 20});
+  
+
+@JsonKey() final  int limit;
+
+/// Create a copy of SearchEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$LoadMoreRequestedCopyWith<LoadMoreRequested> get copyWith => _$LoadMoreRequestedCopyWithImpl<LoadMoreRequested>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LoadMoreRequested&&(identical(other.limit, limit) || other.limit == limit));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,limit);
+
+@override
+String toString() {
+  return 'SearchEvent.loadMoreRequested(limit: $limit)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $LoadMoreRequestedCopyWith<$Res> implements $SearchEventCopyWith<$Res> {
+  factory $LoadMoreRequestedCopyWith(LoadMoreRequested value, $Res Function(LoadMoreRequested) _then) = _$LoadMoreRequestedCopyWithImpl;
+@useResult
+$Res call({
+ int limit
+});
+
+
+
+
+}
+/// @nodoc
+class _$LoadMoreRequestedCopyWithImpl<$Res>
+    implements $LoadMoreRequestedCopyWith<$Res> {
+  _$LoadMoreRequestedCopyWithImpl(this._self, this._then);
+
+  final LoadMoreRequested _self;
+  final $Res Function(LoadMoreRequested) _then;
+
+/// Create a copy of SearchEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? limit = null,}) {
+  return _then(LoadMoreRequested(
+limit: null == limit ? _self.limit : limit // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+
+}
 
 // dart format on

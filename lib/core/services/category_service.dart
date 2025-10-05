@@ -1,10 +1,9 @@
-import 'dart:io';
-
-import 'package:urgut_place/config/di/injection.dart';
-import 'package:urgut_place/core/errors/api_exception.dart';
-import 'package:urgut_place/core/utils/constants.dart';
-import 'package:urgut_place/features/explore/models/category/category_model.dart';
-import 'package:urgut_place/shared/services/api_service.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:shops/config/di.dart';
+import 'package:shops/core/errors/api_exception.dart';
+import 'package:shops/core/utils/constants.dart';
+import 'package:shops/features/explore/models/category/category_model.dart';
+import 'package:shops/shared/services/api_service.dart';
 
 abstract class CategoryService {
   Future<CategoryModel> getCategory(int categoryId);
@@ -15,13 +14,11 @@ class CategoryServiceImpl implements CategoryService {
   @override
   Future<CategoryModel> getCategory(int categoryId) async {
     try {
-      // Check connection
-      final result = await InternetAddress.lookup('example.com');
-      if (result.isEmpty || result[0].rawAddress.isEmpty) {
+      final result = await Connectivity().checkConnectivity();
+      if (!result.any((r) => r != ConnectivityResult.none)) {
         throw ApiException('No internet connection');
       }
 
-      // Get request
       final response = await getIt<ApiService>().getRequest(ApiEndpoints.categories, id: categoryId);
 
       late final CategoryModel category;
@@ -31,7 +28,6 @@ class CategoryServiceImpl implements CategoryService {
         throw ApiException("Category is not available");
       }
 
-      // Return category
       return category;
     } catch (e) {
       rethrow;
@@ -41,13 +37,11 @@ class CategoryServiceImpl implements CategoryService {
   @override
   Future<List<CategoryModel>> getCategories() async {
     try {
-      // Check connection
-      final result = await InternetAddress.lookup('example.com');
-      if (result.isEmpty || result[0].rawAddress.isEmpty) {
+      final result = await Connectivity().checkConnectivity();
+      if (!result.any((r) => r != ConnectivityResult.none)) {
         throw ApiException('No internet connection');
       }
 
-      // Get request
       final response = await getIt<ApiService>().getRequest(ApiEndpoints.categories);
 
       late final List<CategoryModel> categories;
@@ -57,7 +51,6 @@ class CategoryServiceImpl implements CategoryService {
         throw ApiException("Categories are not available");
       }
 
-      // Return categories
       return categories;
     } catch (e) {
       rethrow;

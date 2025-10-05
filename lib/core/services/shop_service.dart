@@ -1,10 +1,10 @@
-import 'dart:io';
-
-import 'package:urgut_place/config/di/injection.dart';
-import 'package:urgut_place/core/errors/api_exception.dart';
-import 'package:urgut_place/core/utils/constants.dart';
-import 'package:urgut_place/shared/models/shop/shop_model.dart';
-import 'package:urgut_place/shared/services/api_service.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:shops/config/di.dart';
+import 'package:shops/core/errors/api_exception.dart';
+import 'package:shops/core/utils/constants.dart';
+import 'package:shops/core/utils/extensions.dart';
+import 'package:shops/shared/models/shop/shop_model.dart';
+import 'package:shops/shared/services/api_service.dart';
 
 abstract class ShopService {
   Future<ShopModel> getShop(int shopId);
@@ -22,13 +22,11 @@ class ShopServiceImpl implements ShopService {
   @override
   Future<ShopModel> getShop(int shopId) async {
     try {
-      // Check connection
-      final result = await InternetAddress.lookup('example.com');
-      if (result.isEmpty || result[0].rawAddress.isEmpty) {
+      final result = await Connectivity().checkConnectivity();
+      if (!result.any((r) => r != ConnectivityResult.none)) {
         throw ApiException('No internet connection');
       }
 
-      // Get request
       final response = await getIt<ApiService>().getRequest(ApiEndpoints.shops, id: shopId);
 
       late final ShopModel shop;
@@ -38,7 +36,6 @@ class ShopServiceImpl implements ShopService {
         throw ApiException("Shop is not available");
       }
 
-      // Return shop
       return shop;
     } catch (e) {
       rethrow;
@@ -55,20 +52,20 @@ class ShopServiceImpl implements ShopService {
     int? limit,
   }) async {
     try {
-      // Check connection
-      final result = await InternetAddress.lookup('example.com');
-      if (result.isEmpty || result[0].rawAddress.isEmpty) {
+      final result = await Connectivity().checkConnectivity();
+      if (!result.any((r) => r != ConnectivityResult.none)) {
         throw ApiException('No internet connection');
       }
 
-      // Get request
       final response = await getIt<ApiService>().getRequest(
         ApiEndpoints.shops,
         queryParameters: {
           if (categoryId != null) "category_id": categoryId,
           if (search != null) "search": search,
-          if (sortBy != null) "sort_by": sortBy.name,
+          if (sortBy != null) "sort_by": sortBy.name.toSnakeCase(),
           if (sortOrder != null) "sort_order": sortOrder.name,
+          if (skip != null) "skip": skip,
+          if (limit != null) "limit": limit,
         },
       );
 
@@ -79,7 +76,6 @@ class ShopServiceImpl implements ShopService {
         throw ApiException("Shops are not available");
       }
 
-      // Return shops
       return shops;
     } catch (e) {
       rethrow;

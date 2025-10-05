@@ -1,9 +1,7 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:urgut_place/config/routes/routes.dart';
-import 'package:urgut_place/core/utils/snackbar.dart';
+import 'package:shops/config/app_routes.dart';
+import 'package:shops/core/services/connectivity_service.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -13,37 +11,27 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  void launch() async {
-    final result = await InternetAddress.lookup('example.com');
-    if (!(result.isEmpty || result[0].rawAddress.isEmpty)) {
-      if (!mounted) return;
-      context.go(Routes.home);
-    } else {
-      ToastUi.showError(message: "Iltimos! Internetni tekshiring va sahifani qaytadan yuklang");
-      if (!mounted) return;
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => Scaffold(
-            body: Center(
-              child: ElevatedButton(onPressed: () => Navigator.pop(context), child: Text("No Internet")),
-            ),
-          ),
-        ),
-      );
-    }
-  }
-
   @override
   void initState() {
     super.initState();
-    launch();
+    _decideNavigation();
+  }
+
+  Future<void> _decideNavigation() async {
+    final connected = await ConnectivityService.isConnected();
+    if (!mounted) return;
+    if (connected) {
+      context.go(Routes.home);
+    } else {
+      context.go(Routes.noInternet);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Center(child: Image.asset('assets/icons/logo.png', height: 100)),
+      body: Center(child: Image.asset('assets/logo.png', height: 100)),
     );
   }
 }

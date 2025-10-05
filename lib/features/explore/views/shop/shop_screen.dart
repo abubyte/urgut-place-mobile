@@ -2,8 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:urgut_place/core/utils/extensions.dart';
-import 'package:urgut_place/shared/models/shop/shop_model.dart';
+import 'package:shops/core/utils/extensions.dart';
+import 'package:shops/shared/models/shop/shop_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ShopScreen extends StatelessWidget {
@@ -189,7 +189,7 @@ class ShopScreen extends StatelessWidget {
                               height: 50,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(100),
-                                image: DecorationImage(image: AssetImage("assets/icons/user.png"), fit: BoxFit.cover),
+                                image: DecorationImage(image: AssetImage("assets/merchant.png"), fit: BoxFit.cover),
                               ),
                             ),
                             SizedBox(width: 16),

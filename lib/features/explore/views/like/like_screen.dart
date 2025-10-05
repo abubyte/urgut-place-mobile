@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:urgut_place/features/explore/viewmodels/like/like_bloc.dart';
-import 'package:urgut_place/features/explore/viewmodels/like/like_state.dart';
-import 'package:urgut_place/shared/widgets/shop_item.dart';
+import 'package:shops/features/explore/viewmodels/like/like_bloc.dart';
+import 'package:shops/features/explore/viewmodels/like/like_state.dart';
+import 'package:shops/shared/widgets/shop_item.dart';
 
 class LikeScreen extends StatelessWidget {
   const LikeScreen({super.key});

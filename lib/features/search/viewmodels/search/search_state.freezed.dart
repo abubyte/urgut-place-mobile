@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$SearchState {
 
- List<ShopModel>? get result; String? get errorMessage; bool get emptyQuery; SearchStatus get status;
+ List<ShopModel>? get result; String? get errorMessage; bool get emptyQuery; SearchStatus get status; int get searchSkip; bool get searchHasMore; bool get searchLoading;
 /// Create a copy of SearchState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $SearchStateCopyWith<SearchState> get copyWith => _$SearchStateCopyWithImpl<Sear
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SearchState&&const DeepCollectionEquality().equals(other.result, result)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.emptyQuery, emptyQuery) || other.emptyQuery == emptyQuery)&&(identical(other.status, status) || other.status == status));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SearchState&&const DeepCollectionEquality().equals(other.result, result)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.emptyQuery, emptyQuery) || other.emptyQuery == emptyQuery)&&(identical(other.status, status) || other.status == status)&&(identical(other.searchSkip, searchSkip) || other.searchSkip == searchSkip)&&(identical(other.searchHasMore, searchHasMore) || other.searchHasMore == searchHasMore)&&(identical(other.searchLoading, searchLoading) || other.searchLoading == searchLoading));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(result),errorMessage,emptyQuery,status);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(result),errorMessage,emptyQuery,status,searchSkip,searchHasMore,searchLoading);
 
 @override
 String toString() {
-  return 'SearchState(result: $result, errorMessage: $errorMessage, emptyQuery: $emptyQuery, status: $status)';
+  return 'SearchState(result: $result, errorMessage: $errorMessage, emptyQuery: $emptyQuery, status: $status, searchSkip: $searchSkip, searchHasMore: $searchHasMore, searchLoading: $searchLoading)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $SearchStateCopyWith<$Res>  {
   factory $SearchStateCopyWith(SearchState value, $Res Function(SearchState) _then) = _$SearchStateCopyWithImpl;
 @useResult
 $Res call({
- List<ShopModel>? result, String? errorMessage, bool emptyQuery, SearchStatus status
+ List<ShopModel>? result, String? errorMessage, bool emptyQuery, SearchStatus status, int searchSkip, bool searchHasMore, bool searchLoading
 });
 
 
@@ -62,13 +62,16 @@ class _$SearchStateCopyWithImpl<$Res>
 
 /// Create a copy of SearchState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? result = freezed,Object? errorMessage = freezed,Object? emptyQuery = null,Object? status = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? result = freezed,Object? errorMessage = freezed,Object? emptyQuery = null,Object? status = null,Object? searchSkip = null,Object? searchHasMore = null,Object? searchLoading = null,}) {
   return _then(_self.copyWith(
 result: freezed == result ? _self.result : result // ignore: cast_nullable_to_non_nullable
 as List<ShopModel>?,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
 as String?,emptyQuery: null == emptyQuery ? _self.emptyQuery : emptyQuery // ignore: cast_nullable_to_non_nullable
 as bool,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as SearchStatus,
+as SearchStatus,searchSkip: null == searchSkip ? _self.searchSkip : searchSkip // ignore: cast_nullable_to_non_nullable
+as int,searchHasMore: null == searchHasMore ? _self.searchHasMore : searchHasMore // ignore: cast_nullable_to_non_nullable
+as bool,searchLoading: null == searchLoading ? _self.searchLoading : searchLoading // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 
@@ -153,10 +156,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<ShopModel>? result,  String? errorMessage,  bool emptyQuery,  SearchStatus status)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<ShopModel>? result,  String? errorMessage,  bool emptyQuery,  SearchStatus status,  int searchSkip,  bool searchHasMore,  bool searchLoading)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SearchState() when $default != null:
-return $default(_that.result,_that.errorMessage,_that.emptyQuery,_that.status);case _:
+return $default(_that.result,_that.errorMessage,_that.emptyQuery,_that.status,_that.searchSkip,_that.searchHasMore,_that.searchLoading);case _:
   return orElse();
 
 }
@@ -174,10 +177,10 @@ return $default(_that.result,_that.errorMessage,_that.emptyQuery,_that.status);c
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<ShopModel>? result,  String? errorMessage,  bool emptyQuery,  SearchStatus status)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<ShopModel>? result,  String? errorMessage,  bool emptyQuery,  SearchStatus status,  int searchSkip,  bool searchHasMore,  bool searchLoading)  $default,) {final _that = this;
 switch (_that) {
 case _SearchState():
-return $default(_that.result,_that.errorMessage,_that.emptyQuery,_that.status);case _:
+return $default(_that.result,_that.errorMessage,_that.emptyQuery,_that.status,_that.searchSkip,_that.searchHasMore,_that.searchLoading);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -194,10 +197,10 @@ return $default(_that.result,_that.errorMessage,_that.emptyQuery,_that.status);c
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<ShopModel>? result,  String? errorMessage,  bool emptyQuery,  SearchStatus status)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<ShopModel>? result,  String? errorMessage,  bool emptyQuery,  SearchStatus status,  int searchSkip,  bool searchHasMore,  bool searchLoading)?  $default,) {final _that = this;
 switch (_that) {
 case _SearchState() when $default != null:
-return $default(_that.result,_that.errorMessage,_that.emptyQuery,_that.status);case _:
+return $default(_that.result,_that.errorMessage,_that.emptyQuery,_that.status,_that.searchSkip,_that.searchHasMore,_that.searchLoading);case _:
   return null;
 
 }
@@ -209,7 +212,7 @@ return $default(_that.result,_that.errorMessage,_that.emptyQuery,_that.status);c
 
 
 class _SearchState implements SearchState {
-  const _SearchState({final  List<ShopModel>? result = const [], this.errorMessage, this.emptyQuery = true, this.status = SearchStatus.initial}): _result = result;
+  const _SearchState({final  List<ShopModel>? result = const [], this.errorMessage, this.emptyQuery = true, this.status = SearchStatus.initial, this.searchSkip = 0, this.searchHasMore = true, this.searchLoading = false}): _result = result;
   
 
  final  List<ShopModel>? _result;
@@ -224,6 +227,9 @@ class _SearchState implements SearchState {
 @override final  String? errorMessage;
 @override@JsonKey() final  bool emptyQuery;
 @override@JsonKey() final  SearchStatus status;
+@override@JsonKey() final  int searchSkip;
+@override@JsonKey() final  bool searchHasMore;
+@override@JsonKey() final  bool searchLoading;
 
 /// Create a copy of SearchState
 /// with the given fields replaced by the non-null parameter values.
@@ -235,16 +241,16 @@ _$SearchStateCopyWith<_SearchState> get copyWith => __$SearchStateCopyWithImpl<_
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SearchState&&const DeepCollectionEquality().equals(other._result, _result)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.emptyQuery, emptyQuery) || other.emptyQuery == emptyQuery)&&(identical(other.status, status) || other.status == status));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SearchState&&const DeepCollectionEquality().equals(other._result, _result)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.emptyQuery, emptyQuery) || other.emptyQuery == emptyQuery)&&(identical(other.status, status) || other.status == status)&&(identical(other.searchSkip, searchSkip) || other.searchSkip == searchSkip)&&(identical(other.searchHasMore, searchHasMore) || other.searchHasMore == searchHasMore)&&(identical(other.searchLoading, searchLoading) || other.searchLoading == searchLoading));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_result),errorMessage,emptyQuery,status);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_result),errorMessage,emptyQuery,status,searchSkip,searchHasMore,searchLoading);
 
 @override
 String toString() {
-  return 'SearchState(result: $result, errorMessage: $errorMessage, emptyQuery: $emptyQuery, status: $status)';
+  return 'SearchState(result: $result, errorMessage: $errorMessage, emptyQuery: $emptyQuery, status: $status, searchSkip: $searchSkip, searchHasMore: $searchHasMore, searchLoading: $searchLoading)';
 }
 
 
@@ -255,7 +261,7 @@ abstract mixin class _$SearchStateCopyWith<$Res> implements $SearchStateCopyWith
   factory _$SearchStateCopyWith(_SearchState value, $Res Function(_SearchState) _then) = __$SearchStateCopyWithImpl;
 @override @useResult
 $Res call({
- List<ShopModel>? result, String? errorMessage, bool emptyQuery, SearchStatus status
+ List<ShopModel>? result, String? errorMessage, bool emptyQuery, SearchStatus status, int searchSkip, bool searchHasMore, bool searchLoading
 });
 
 
@@ -272,13 +278,16 @@ class __$SearchStateCopyWithImpl<$Res>
 
 /// Create a copy of SearchState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? result = freezed,Object? errorMessage = freezed,Object? emptyQuery = null,Object? status = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? result = freezed,Object? errorMessage = freezed,Object? emptyQuery = null,Object? status = null,Object? searchSkip = null,Object? searchHasMore = null,Object? searchLoading = null,}) {
   return _then(_SearchState(
 result: freezed == result ? _self._result : result // ignore: cast_nullable_to_non_nullable
 as List<ShopModel>?,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
 as String?,emptyQuery: null == emptyQuery ? _self.emptyQuery : emptyQuery // ignore: cast_nullable_to_non_nullable
 as bool,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as SearchStatus,
+as SearchStatus,searchSkip: null == searchSkip ? _self.searchSkip : searchSkip // ignore: cast_nullable_to_non_nullable
+as int,searchHasMore: null == searchHasMore ? _self.searchHasMore : searchHasMore // ignore: cast_nullable_to_non_nullable
+as bool,searchLoading: null == searchLoading ? _self.searchLoading : searchLoading // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 

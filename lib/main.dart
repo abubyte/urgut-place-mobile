@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:urgut_place/app.dart';
-import 'package:urgut_place/config/di/injection.dart';
+import 'package:shops/app.dart';
+import 'package:shops/config/di.dart' as di;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  init();
+  di.init();
 
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 

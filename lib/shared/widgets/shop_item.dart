@@ -2,11 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:urgut_place/core/utils/extensions.dart';
-import 'package:urgut_place/features/explore/viewmodels/like/like_bloc.dart';
-import 'package:urgut_place/features/explore/viewmodels/like/like_event.dart';
-import 'package:urgut_place/features/explore/views/shop/shop_screen.dart';
-import 'package:urgut_place/shared/models/shop/shop_model.dart';
+import 'package:shops/core/utils/extensions.dart';
+import 'package:shops/features/explore/viewmodels/like/like_bloc.dart';
+import 'package:shops/features/explore/viewmodels/like/like_event.dart';
+import 'package:shops/features/explore/views/shop/shop_screen.dart';
+import 'package:shops/shared/models/shop/shop_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ShopItem extends StatelessWidget {
@@ -85,7 +85,7 @@ class ShopItem extends StatelessWidget {
                           child: Center(
                             child: IconButton(
                               onPressed: () {
-                                if (likeBloc.state.shopIds.contains(shop.id)) {
+                                if (likeBloc.state.shopIds.contains(shop.id.toString())) {
                                   likeBloc.add(DeleteLike(shop.id));
                                   likeBloc.add(GetLikes());
                                 } else {
@@ -93,7 +93,11 @@ class ShopItem extends StatelessWidget {
                                   likeBloc.add(GetLikes());
                                 }
                               },
-                              icon: BlocProvider.of<LikeBloc>(context, listen: true).state.shopIds.contains(shop.id)
+                              icon:
+                                  BlocProvider.of<LikeBloc>(
+                                    context,
+                                    listen: true,
+                                  ).state.shopIds.contains(shop.id.toString())
                                   ? Icon(Icons.favorite_outlined, size: 18, color: Colors.red)
                                   : Icon(Icons.favorite_outline, size: 18),
                               padding: EdgeInsets.zero,
