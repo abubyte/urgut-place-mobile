@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shops/core/services/shop_service.dart';
 import 'package:shops/core/utils/snackbar.dart';
+import 'package:shops/core/errors/api_exception.dart';
 import 'package:shops/features/search/viewmodels/search/search_event.dart';
 import 'package:shops/features/search/viewmodels/search/search_state.dart';
 import 'package:shops/shared/models/shop/shop_model.dart';
@@ -27,8 +28,6 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         search: searchController.text.trim(),
         skip: 0,
         limit: 20,
-        sortBy: SortBy.rating,
-        sortOrder: SortOrder.desc,
       );
 
       if (result.isNotEmpty) {
@@ -53,7 +52,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         );
       }
     } catch (e) {
-      ToastUi.showError(message: e.toString());
+      ToastUi.showError(message: (e is ApiException) ? e.message : e.toString());
       emit(
         state.copyWith(
           status: SearchStatus.failure,
@@ -81,8 +80,6 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         search: searchController.text.trim(),
         skip: state.searchSkip,
         limit: event.limit,
-        sortBy: SortBy.rating,
-        sortOrder: SortOrder.desc,
       );
 
       final currentResults = state.result ?? [];
@@ -98,7 +95,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       );
     } catch (e) {
       emit(state.copyWith(searchLoading: false));
-      ToastUi.showError(message: e.toString());
+      ToastUi.showError(message: (e is ApiException) ? e.message : e.toString());
     }
   }
 

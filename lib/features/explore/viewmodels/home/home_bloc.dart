@@ -2,6 +2,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shops/core/services/category_service.dart';
 import 'package:shops/core/services/shop_service.dart';
 import 'package:shops/core/utils/snackbar.dart';
+import 'package:shops/core/errors/api_exception.dart';
+import 'package:shops/features/explore/models/category/category_model.dart';
 import 'package:shops/features/explore/viewmodels/home/home_event.dart';
 import 'package:shops/features/explore/viewmodels/home/home_state.dart';
 import 'package:shops/shared/models/shop/shop_model.dart';
@@ -19,9 +21,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<LoadMoreCategoryRequested>(_onLoadMoreCategoryRequested);
     on<RefreshCategoryRequested>(_onRefreshCategoryRequested);
 
-    // Initialize both featured shops/categories AND all shops
+    // Initialize - load everything together
     add(FetchShopsRequested());
-    add(FetchAllInitialRequested());
   }
 
   Future<void> _onFetchShopsRequested(
@@ -29,31 +30,47 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     Emitter<HomeState> emit,
   ) async {
     emit(state.copyWith(status: HomeStatus.loading));
+
     try {
-      // Get featured Shops
-      var featuredShops = await _shopService.getShops();
-      featuredShops.removeWhere((shop) => !shop.isFeatured);
+      // Fetch all data in parallel
+      final results = await Future.wait([
+        _shopService.getShops(featured: true),
+        _categoryService.getCategories(),
+        _shopService.getShops(
+          skip: 0,
+          limit: 20,
+        ), // No sort params - backend returns random
+      ]);
 
-      final categories = await _categoryService.getCategories();
+      final featuredShops = results[0] as List<ShopModel>;
+      final categories = results[1] as List<CategoryModel>;
+      final allShops = results[2] as List<ShopModel>;
 
+      // Initialize category data structures
       Map<int, List<ShopModel>> categoryShops = {};
       Map<int, int> categorySkip = {};
       Map<int, bool> categoryHasMore = {};
       Map<int, bool> categoryLoading = {};
 
-      for (var category in categories) {
+      // Load initial category shops in parallel
+      final categoryShopsFutures = categories.map((category) async {
         final shops = await _shopService.getShops(
           categoryId: category.id,
           skip: 0,
           limit: 20,
-        );
-        categoryShops[category.id] = shops;
-        categorySkip[category.id] = shops.length;
-        categoryHasMore[category.id] = shops.length == 20;
-        categoryLoading[category.id] = false;
+        ); // No sort params - backend returns random
+        return MapEntry(category.id, shops);
+      });
+
+      final categoryShopsResults = await Future.wait(categoryShopsFutures);
+
+      for (var entry in categoryShopsResults) {
+        categoryShops[entry.key] = entry.value;
+        categorySkip[entry.key] = entry.value.length;
+        categoryHasMore[entry.key] = entry.value.length == 20;
+        categoryLoading[entry.key] = false;
       }
 
-      // Don't change status to empty here - let the all shops load first
       emit(
         state.copyWith(
           featuredShops: featuredShops,
@@ -62,14 +79,22 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           categorySkip: categorySkip,
           categoryHasMore: categoryHasMore,
           categoryLoading: categoryLoading,
-          status: HomeStatus.loaded, // Set to loaded, not empty
+          allShops: allShops,
+          allSkip: allShops.length,
+          allHasMore: allShops.length == 20,
+          allLoading: false,
+          status: HomeStatus.loaded,
         ),
       );
     } catch (e) {
+      final msg = (e is ApiException) ? e.message : e.toString();
       emit(
-        state.copyWith(status: HomeStatus.error, errorMessage: e.toString()),
+        state.copyWith(
+          status: HomeStatus.error,
+          errorMessage: msg,
+        ),
       );
-      ToastUi.showError(message: e.toString());
+      ToastUi.showError(message: msg);
     }
   }
 
@@ -79,43 +104,25 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   ) async {
     if (state.allLoading) return;
 
-    // Don't set allLoading during initial app load to avoid UI conflicts
-    bool isInitialLoad = state.allShops.isEmpty;
-    if (!isInitialLoad) {
-      emit(state.copyWith(allLoading: true));
-    }
+    emit(state.copyWith(allLoading: true));
 
     try {
       final shops = await _shopService.getShops(
         skip: 0,
-        limit: event.limit, // Add null safety
-        sortBy: SortBy.createdAt,
-        sortOrder: SortOrder.desc,
-      );
+        limit: event.limit,
+      ); // No sort params - backend returns random
 
       emit(
         state.copyWith(
           allShops: shops,
           allSkip: shops.length,
-          allHasMore: shops.length == (event.limit),
+          allHasMore: shops.length == event.limit,
           allLoading: false,
-          // If this is initial load and we have shops, ensure status is loaded
-          status: isInitialLoad && shops.isNotEmpty
-              ? HomeStatus.loaded
-              : state.status,
         ),
       );
     } catch (e) {
-      emit(
-        state.copyWith(
-          allLoading: false,
-          status: state.allShops.isEmpty ? HomeStatus.error : state.status,
-          errorMessage: state.allShops.isEmpty
-              ? e.toString()
-              : state.errorMessage,
-        ),
-      );
-      ToastUi.showError(message: e.toString());
+      ToastUi.showError(message: (e is ApiException) ? e.message : e.toString());
+      emit(state.copyWith(allLoading: false));
     }
   }
 
@@ -124,26 +131,45 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     Emitter<HomeState> emit,
   ) async {
     if (state.allLoading || !state.allHasMore) return;
+
     emit(state.copyWith(allLoading: true));
+
     try {
       final shops = await _shopService.getShops(
         skip: state.allSkip,
         limit: event.limit,
-        sortBy: SortBy.createdAt,
-        sortOrder: SortOrder.desc,
-      );
-      final next = List<ShopModel>.from(state.allShops)..addAll(shops);
+      ); // No sort params - backend returns random
+
+      // Deduplication: Filter out shops that already exist
+      final existingIds = state.allShops.map((shop) => shop.id).toSet();
+      final uniqueNewShops = shops.where((shop) => !existingIds.contains(shop.id)).toList();
+
+      // Check if we received shops but all were duplicates
+      if (shops.isNotEmpty && uniqueNewShops.isEmpty) {
+        // All shops were duplicates - pool exhausted
+        emit(
+          state.copyWith(
+            allHasMore: false,
+            allLoading: false,
+          ),
+        );
+        return;
+      }
+
+      // Add unique shops
+      final next = List<ShopModel>.from(state.allShops)..addAll(uniqueNewShops);
+
       emit(
         state.copyWith(
           allShops: next,
-          allSkip: state.allSkip + shops.length,
-          allHasMore: shops.length == (event.limit),
+          allSkip: state.allSkip + uniqueNewShops.length,
+          allHasMore: shops.length == event.limit, // Still true if backend returned full page
           allLoading: false,
         ),
       );
     } catch (e) {
+      ToastUi.showError(message: (e is ApiException) ? e.message : e.toString());
       emit(state.copyWith(allLoading: false));
-      ToastUi.showError(message: e.toString());
     }
   }
 
@@ -152,7 +178,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     Emitter<HomeState> emit,
   ) async {
     if (state.allLoading) return;
+
+    // Clear existing data
     emit(state.copyWith(allShops: [], allSkip: 0, allHasMore: true));
+
+    // Fetch fresh data
     await _onFetchAllInitialRequested(
       FetchAllInitialRequested(limit: event.limit),
       emit,
@@ -174,9 +204,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         categoryId: event.categoryId,
         skip: 0,
         limit: event.limit,
-        sortBy: SortBy.createdAt,
-        sortOrder: SortOrder.desc,
-      );
+      ); // No sort params - backend returns random
 
       final newCategoryShops = Map<int, List<ShopModel>>.from(
         state.categoryShops,
@@ -187,8 +215,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       newCategorySkip[event.categoryId] = shops.length;
 
       final newCategoryHasMore = Map<int, bool>.from(state.categoryHasMore);
-      newCategoryHasMore[event.categoryId] =
-          shops.length == (event.limit);
+      newCategoryHasMore[event.categoryId] = shops.length == event.limit;
 
       newCategoryLoading[event.categoryId] = false;
 
@@ -203,7 +230,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     } catch (e) {
       newCategoryLoading[event.categoryId] = false;
       emit(state.copyWith(categoryLoading: newCategoryLoading));
-      ToastUi.showError(message: e.toString());
+      ToastUi.showError(message: (e is ApiException) ? e.message : e.toString());
     }
   }
 
@@ -212,8 +239,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     Emitter<HomeState> emit,
   ) async {
     if (state.categoryLoading[event.categoryId] == true ||
-        state.categoryHasMore[event.categoryId] != true)
-      {return;}
+        state.categoryHasMore[event.categoryId] != true) {
+      return;
+    }
 
     final newCategoryLoading = Map<int, bool>.from(state.categoryLoading);
     newCategoryLoading[event.categoryId] = true;
@@ -225,12 +253,33 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         categoryId: event.categoryId,
         skip: currentSkip,
         limit: event.limit,
-        sortBy: SortBy.createdAt,
-        sortOrder: SortOrder.desc,
-      );
+      ); // No sort params - backend returns random
 
       final currentShops = state.categoryShops[event.categoryId] ?? [];
-      final newShops = List<ShopModel>.from(currentShops)..addAll(shops);
+
+      // Deduplication: Filter out shops that already exist in this category
+      final existingIds = currentShops.map((shop) => shop.id).toSet();
+      final uniqueNewShops = shops.where((shop) => !existingIds.contains(shop.id)).toList();
+
+      // Check if we received shops but all were duplicates
+      if (shops.isNotEmpty && uniqueNewShops.isEmpty) {
+        // All shops were duplicates - pool exhausted for this category
+        final newCategoryHasMore = Map<int, bool>.from(state.categoryHasMore);
+        newCategoryHasMore[event.categoryId] = false;
+
+        newCategoryLoading[event.categoryId] = false;
+
+        emit(
+          state.copyWith(
+            categoryHasMore: newCategoryHasMore,
+            categoryLoading: newCategoryLoading,
+          ),
+        );
+        return;
+      }
+
+      // Add unique shops
+      final newShops = List<ShopModel>.from(currentShops)..addAll(uniqueNewShops);
 
       final newCategoryShops = Map<int, List<ShopModel>>.from(
         state.categoryShops,
@@ -238,11 +287,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       newCategoryShops[event.categoryId] = newShops;
 
       final newCategorySkip = Map<int, int>.from(state.categorySkip);
-      newCategorySkip[event.categoryId] = currentSkip + shops.length;
+      newCategorySkip[event.categoryId] = currentSkip + uniqueNewShops.length;
 
       final newCategoryHasMore = Map<int, bool>.from(state.categoryHasMore);
-      newCategoryHasMore[event.categoryId] =
-          shops.length == (event.limit);
+      newCategoryHasMore[event.categoryId] = shops.length == event.limit;
 
       newCategoryLoading[event.categoryId] = false;
 
@@ -257,7 +305,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     } catch (e) {
       newCategoryLoading[event.categoryId] = false;
       emit(state.copyWith(categoryLoading: newCategoryLoading));
-      ToastUi.showError(message: e.toString());
+      ToastUi.showError(message: (e is ApiException) ? e.message : e.toString());
     }
   }
 
@@ -267,6 +315,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   ) async {
     if (state.categoryLoading[event.categoryId] == true) return;
 
+    // Clear existing data for this category
     final newCategoryShops = Map<int, List<ShopModel>>.from(
       state.categoryShops,
     );
@@ -286,6 +335,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       ),
     );
 
+    // Fetch fresh data
     await _onFetchCategoryInitialRequested(
       FetchCategoryInitialRequested(
         categoryId: event.categoryId,

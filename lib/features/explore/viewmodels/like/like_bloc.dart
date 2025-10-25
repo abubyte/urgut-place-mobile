@@ -3,6 +3,7 @@ import 'package:shops/config/di.dart';
 import 'package:shops/core/services/like_service.dart';
 import 'package:shops/core/services/shop_service.dart';
 import 'package:shops/core/utils/snackbar.dart';
+import 'package:shops/core/errors/api_exception.dart';
 import 'package:shops/features/explore/viewmodels/like/like_event.dart';
 import 'package:shops/features/explore/viewmodels/like/like_state.dart';
 
@@ -31,7 +32,7 @@ class LikeBloc extends Bloc<LikeEvent, LikeState> {
         emit(state.copyWith(status: LikeStatus.success, likedShops: likedShops, shopIds: likedShopIds));
       }
     } catch (e) {
-      ToastUi.showError(message: e.toString());
+      ToastUi.showError(message: _errorMessage(e));
       emit(state.copyWith(status: LikeStatus.failure));
     }
   }
@@ -48,7 +49,7 @@ class LikeBloc extends Bloc<LikeEvent, LikeState> {
 
       emit(state.copyWith(status: LikeStatus.success, shopIds: newShopIds, likedShops: newLikedShops));
     } catch (e) {
-      ToastUi.showError(message: e.toString());
+      ToastUi.showError(message: _errorMessage(e));
       emit(state.copyWith(status: LikeStatus.failure));
     }
   }
@@ -64,8 +65,13 @@ class LikeBloc extends Bloc<LikeEvent, LikeState> {
 
       emit(state.copyWith(status: LikeStatus.success, likedShops: newLikedShops, shopIds: newShopIds));
     } catch (e) {
-      ToastUi.showError(message: e.toString());
+      ToastUi.showError(message: _errorMessage(e));
       emit(state.copyWith(status: LikeStatus.failure));
     }
+  }
+
+  String _errorMessage(Object? e) {
+    if (e is ApiException) return e.message;
+    return e?.toString() ?? 'Noma\'lum xato yuz berdi';
   }
 }

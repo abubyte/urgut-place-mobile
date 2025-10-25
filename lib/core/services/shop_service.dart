@@ -2,7 +2,6 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:shops/config/di.dart';
 import 'package:shops/core/errors/api_exception.dart';
 import 'package:shops/core/utils/constants.dart';
-import 'package:shops/core/utils/extensions.dart';
 import 'package:shops/shared/models/shop/shop_model.dart';
 import 'package:shops/shared/services/api_service.dart';
 
@@ -11,8 +10,7 @@ abstract class ShopService {
   Future<List<ShopModel>> getShops({
     int categoryId,
     String search,
-    SortBy sortBy,
-    SortOrder sortOrder,
+    bool featured,
     int skip,
     int limit,
   });
@@ -27,7 +25,10 @@ class ShopServiceImpl implements ShopService {
         throw ApiException('No internet connection');
       }
 
-      final response = await getIt<ApiService>().getRequest(ApiEndpoints.shops, id: shopId);
+      final response = await getIt<ApiService>().getRequest(
+        ApiEndpoints.shops,
+        id: shopId,
+      );
 
       late final ShopModel shop;
       if (response.data != null) {
@@ -46,8 +47,7 @@ class ShopServiceImpl implements ShopService {
   Future<List<ShopModel>> getShops({
     int? categoryId,
     String? search,
-    SortBy? sortBy,
-    SortOrder? sortOrder,
+    bool? featured,
     int? skip,
     int? limit,
   }) async {
@@ -62,16 +62,17 @@ class ShopServiceImpl implements ShopService {
         queryParameters: {
           if (categoryId != null) "category_id": categoryId,
           if (search != null) "search": search,
-          if (sortBy != null) "sort_by": sortBy.name.toSnakeCase(),
-          if (sortOrder != null) "sort_order": sortOrder.name,
           if (skip != null) "skip": skip,
           if (limit != null) "limit": limit,
+          if (featured != null) "featured": featured,
         },
       );
 
       late final List<ShopModel> shops;
       if (response.data != null) {
-        shops = (response.data as List).map((e) => ShopModel.fromJson(e)).toList();
+        shops = (response.data as List)
+            .map((e) => ShopModel.fromJson(e))
+            .toList();
       } else {
         throw ApiException("Shops are not available");
       }
@@ -82,7 +83,3 @@ class ShopServiceImpl implements ShopService {
     }
   }
 }
-
-enum SortBy { rating, name, createdAt, likeCount, ratingCount }
-
-enum SortOrder { asc, desc }
