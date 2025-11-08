@@ -124,29 +124,13 @@ class ShopItem extends StatelessWidget {
                     ),
                     SizedBox(height: 4),
 
-                    shop.rating > 0
-                        ? Row(
-                            children:
-                                List.generate(
-                                  shop.rating.toInt(),
-                                  (index) => Icon(Icons.star, color: Colors.yellow, size: 14),
-                                )..addAll([
-                                  SizedBox(width: 4),
-                                  Text(
-                                    shop.rating.toString(),
-                                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
-                                  ),
-                                ]),
-                          )
-                        : 12.h,
-
                     Row(
                       children: [
-                        Icon(Icons.access_time, size: 14, color: Colors.grey),
+                        Icon(Icons.location_on_outlined, size: 14, color: Colors.grey),
                         SizedBox(width: 4),
                         Expanded(
                           child: Text(
-                            shop.workTime,
+                            "Sektor ${shop.sector} • ${shop.number}",
                             style: TextStyle(fontSize: 12, color: Colors.grey),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -154,6 +138,7 @@ class ShopItem extends StatelessWidget {
                         ),
                       ],
                     ),
+
                     SizedBox(height: 8),
 
                     OutlinedButton(

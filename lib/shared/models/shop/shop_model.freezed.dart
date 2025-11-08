@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ShopModel {
 
- int get id; String get name;@JsonKey(name: 'work_time') String get workTime; String get description;@JsonKey(name: 'category_id') int get categoryId;@JsonKey(name: 'image_urls') List<String> get imageUrls;@JsonKey(name: 'seller_phone') String get sellerPhone; double get rating;@JsonKey(name: 'rating_count') int get ratingCount;@JsonKey(name: 'like_count') int get likeCount;@JsonKey(name: 'location_lat') double get latitude;@JsonKey(name: 'location_long') double get longitude;@JsonKey(name: 'location_str') String get landmark;@JsonKey(name: 'is_featured') bool get isFeatured;@JsonKey(name: 'created_at') DateTime get createdAt;@JsonKey(name: 'updated_at') DateTime get updatedAt;
+ int get id;@JsonKey(defaultValue: '') String get name;@JsonKey(defaultValue: '') String get description;@JsonKey(name: 'category_id') int get categoryId;@JsonKey(name: 'image_urls', defaultValue: <String>[]) List<String> get imageUrls;@JsonKey(name: 'seller_phones', defaultValue: <String>[]) List<String> get sellerPhones;@JsonKey(name: 'location_lat') double get latitude;@JsonKey(name: 'location_long') double get longitude;@JsonKey(defaultValue: 0) int get sector;@JsonKey(defaultValue: 0) int get number;@JsonKey(name: 'sale_type', defaultValue: 'retail') String get saleType;@JsonKey(name: 'logo_url') String? get logoUrl;@JsonKey(name: 'social_networks', defaultValue: <SocialNetworkModel>[]) List<SocialNetworkModel> get socialNetworks;@JsonKey(name: 'is_featured') bool get isFeatured;@JsonKey(name: 'created_at') DateTime get createdAt;@JsonKey(name: 'updated_at') DateTime get updatedAt;
 /// Create a copy of ShopModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $ShopModelCopyWith<ShopModel> get copyWith => _$ShopModelCopyWithImpl<ShopModel>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ShopModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.workTime, workTime) || other.workTime == workTime)&&(identical(other.description, description) || other.description == description)&&(identical(other.categoryId, categoryId) || other.categoryId == categoryId)&&const DeepCollectionEquality().equals(other.imageUrls, imageUrls)&&(identical(other.sellerPhone, sellerPhone) || other.sellerPhone == sellerPhone)&&(identical(other.rating, rating) || other.rating == rating)&&(identical(other.ratingCount, ratingCount) || other.ratingCount == ratingCount)&&(identical(other.likeCount, likeCount) || other.likeCount == likeCount)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.landmark, landmark) || other.landmark == landmark)&&(identical(other.isFeatured, isFeatured) || other.isFeatured == isFeatured)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ShopModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.categoryId, categoryId) || other.categoryId == categoryId)&&const DeepCollectionEquality().equals(other.imageUrls, imageUrls)&&const DeepCollectionEquality().equals(other.sellerPhones, sellerPhones)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.sector, sector) || other.sector == sector)&&(identical(other.number, number) || other.number == number)&&(identical(other.saleType, saleType) || other.saleType == saleType)&&(identical(other.logoUrl, logoUrl) || other.logoUrl == logoUrl)&&const DeepCollectionEquality().equals(other.socialNetworks, socialNetworks)&&(identical(other.isFeatured, isFeatured) || other.isFeatured == isFeatured)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,workTime,description,categoryId,const DeepCollectionEquality().hash(imageUrls),sellerPhone,rating,ratingCount,likeCount,latitude,longitude,landmark,isFeatured,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,id,name,description,categoryId,const DeepCollectionEquality().hash(imageUrls),const DeepCollectionEquality().hash(sellerPhones),latitude,longitude,sector,number,saleType,logoUrl,const DeepCollectionEquality().hash(socialNetworks),isFeatured,createdAt,updatedAt);
 
 @override
 String toString() {
-  return 'ShopModel(id: $id, name: $name, workTime: $workTime, description: $description, categoryId: $categoryId, imageUrls: $imageUrls, sellerPhone: $sellerPhone, rating: $rating, ratingCount: $ratingCount, likeCount: $likeCount, latitude: $latitude, longitude: $longitude, landmark: $landmark, isFeatured: $isFeatured, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'ShopModel(id: $id, name: $name, description: $description, categoryId: $categoryId, imageUrls: $imageUrls, sellerPhones: $sellerPhones, latitude: $latitude, longitude: $longitude, sector: $sector, number: $number, saleType: $saleType, logoUrl: $logoUrl, socialNetworks: $socialNetworks, isFeatured: $isFeatured, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $ShopModelCopyWith<$Res>  {
   factory $ShopModelCopyWith(ShopModel value, $Res Function(ShopModel) _then) = _$ShopModelCopyWithImpl;
 @useResult
 $Res call({
- int id, String name,@JsonKey(name: 'work_time') String workTime, String description,@JsonKey(name: 'category_id') int categoryId,@JsonKey(name: 'image_urls') List<String> imageUrls,@JsonKey(name: 'seller_phone') String sellerPhone, double rating,@JsonKey(name: 'rating_count') int ratingCount,@JsonKey(name: 'like_count') int likeCount,@JsonKey(name: 'location_lat') double latitude,@JsonKey(name: 'location_long') double longitude,@JsonKey(name: 'location_str') String landmark,@JsonKey(name: 'is_featured') bool isFeatured,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'updated_at') DateTime updatedAt
+ int id,@JsonKey(defaultValue: '') String name,@JsonKey(defaultValue: '') String description,@JsonKey(name: 'category_id') int categoryId,@JsonKey(name: 'image_urls', defaultValue: <String>[]) List<String> imageUrls,@JsonKey(name: 'seller_phones', defaultValue: <String>[]) List<String> sellerPhones,@JsonKey(name: 'location_lat') double latitude,@JsonKey(name: 'location_long') double longitude,@JsonKey(defaultValue: 0) int sector,@JsonKey(defaultValue: 0) int number,@JsonKey(name: 'sale_type', defaultValue: 'retail') String saleType,@JsonKey(name: 'logo_url') String? logoUrl,@JsonKey(name: 'social_networks', defaultValue: <SocialNetworkModel>[]) List<SocialNetworkModel> socialNetworks,@JsonKey(name: 'is_featured') bool isFeatured,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'updated_at') DateTime updatedAt
 });
 
 
@@ -65,22 +65,22 @@ class _$ShopModelCopyWithImpl<$Res>
 
 /// Create a copy of ShopModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? workTime = null,Object? description = null,Object? categoryId = null,Object? imageUrls = null,Object? sellerPhone = null,Object? rating = null,Object? ratingCount = null,Object? likeCount = null,Object? latitude = null,Object? longitude = null,Object? landmark = null,Object? isFeatured = null,Object? createdAt = null,Object? updatedAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? description = null,Object? categoryId = null,Object? imageUrls = null,Object? sellerPhones = null,Object? latitude = null,Object? longitude = null,Object? sector = null,Object? number = null,Object? saleType = null,Object? logoUrl = freezed,Object? socialNetworks = null,Object? isFeatured = null,Object? createdAt = null,Object? updatedAt = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,workTime: null == workTime ? _self.workTime : workTime // ignore: cast_nullable_to_non_nullable
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,categoryId: null == categoryId ? _self.categoryId : categoryId // ignore: cast_nullable_to_non_nullable
 as int,imageUrls: null == imageUrls ? _self.imageUrls : imageUrls // ignore: cast_nullable_to_non_nullable
-as List<String>,sellerPhone: null == sellerPhone ? _self.sellerPhone : sellerPhone // ignore: cast_nullable_to_non_nullable
-as String,rating: null == rating ? _self.rating : rating // ignore: cast_nullable_to_non_nullable
-as double,ratingCount: null == ratingCount ? _self.ratingCount : ratingCount // ignore: cast_nullable_to_non_nullable
-as int,likeCount: null == likeCount ? _self.likeCount : likeCount // ignore: cast_nullable_to_non_nullable
-as int,latitude: null == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable
+as List<String>,sellerPhones: null == sellerPhones ? _self.sellerPhones : sellerPhones // ignore: cast_nullable_to_non_nullable
+as List<String>,latitude: null == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable
 as double,longitude: null == longitude ? _self.longitude : longitude // ignore: cast_nullable_to_non_nullable
-as double,landmark: null == landmark ? _self.landmark : landmark // ignore: cast_nullable_to_non_nullable
-as String,isFeatured: null == isFeatured ? _self.isFeatured : isFeatured // ignore: cast_nullable_to_non_nullable
+as double,sector: null == sector ? _self.sector : sector // ignore: cast_nullable_to_non_nullable
+as int,number: null == number ? _self.number : number // ignore: cast_nullable_to_non_nullable
+as int,saleType: null == saleType ? _self.saleType : saleType // ignore: cast_nullable_to_non_nullable
+as String,logoUrl: freezed == logoUrl ? _self.logoUrl : logoUrl // ignore: cast_nullable_to_non_nullable
+as String?,socialNetworks: null == socialNetworks ? _self.socialNetworks : socialNetworks // ignore: cast_nullable_to_non_nullable
+as List<SocialNetworkModel>,isFeatured: null == isFeatured ? _self.isFeatured : isFeatured // ignore: cast_nullable_to_non_nullable
 as bool,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,
@@ -168,10 +168,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String name, @JsonKey(name: 'work_time')  String workTime,  String description, @JsonKey(name: 'category_id')  int categoryId, @JsonKey(name: 'image_urls')  List<String> imageUrls, @JsonKey(name: 'seller_phone')  String sellerPhone,  double rating, @JsonKey(name: 'rating_count')  int ratingCount, @JsonKey(name: 'like_count')  int likeCount, @JsonKey(name: 'location_lat')  double latitude, @JsonKey(name: 'location_long')  double longitude, @JsonKey(name: 'location_str')  String landmark, @JsonKey(name: 'is_featured')  bool isFeatured, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id, @JsonKey(defaultValue: '')  String name, @JsonKey(defaultValue: '')  String description, @JsonKey(name: 'category_id')  int categoryId, @JsonKey(name: 'image_urls', defaultValue: <String>[])  List<String> imageUrls, @JsonKey(name: 'seller_phones', defaultValue: <String>[])  List<String> sellerPhones, @JsonKey(name: 'location_lat')  double latitude, @JsonKey(name: 'location_long')  double longitude, @JsonKey(defaultValue: 0)  int sector, @JsonKey(defaultValue: 0)  int number, @JsonKey(name: 'sale_type', defaultValue: 'retail')  String saleType, @JsonKey(name: 'logo_url')  String? logoUrl, @JsonKey(name: 'social_networks', defaultValue: <SocialNetworkModel>[])  List<SocialNetworkModel> socialNetworks, @JsonKey(name: 'is_featured')  bool isFeatured, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ShopModel() when $default != null:
-return $default(_that.id,_that.name,_that.workTime,_that.description,_that.categoryId,_that.imageUrls,_that.sellerPhone,_that.rating,_that.ratingCount,_that.likeCount,_that.latitude,_that.longitude,_that.landmark,_that.isFeatured,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.name,_that.description,_that.categoryId,_that.imageUrls,_that.sellerPhones,_that.latitude,_that.longitude,_that.sector,_that.number,_that.saleType,_that.logoUrl,_that.socialNetworks,_that.isFeatured,_that.createdAt,_that.updatedAt);case _:
   return orElse();
 
 }
@@ -189,10 +189,10 @@ return $default(_that.id,_that.name,_that.workTime,_that.description,_that.categ
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String name, @JsonKey(name: 'work_time')  String workTime,  String description, @JsonKey(name: 'category_id')  int categoryId, @JsonKey(name: 'image_urls')  List<String> imageUrls, @JsonKey(name: 'seller_phone')  String sellerPhone,  double rating, @JsonKey(name: 'rating_count')  int ratingCount, @JsonKey(name: 'like_count')  int likeCount, @JsonKey(name: 'location_lat')  double latitude, @JsonKey(name: 'location_long')  double longitude, @JsonKey(name: 'location_str')  String landmark, @JsonKey(name: 'is_featured')  bool isFeatured, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id, @JsonKey(defaultValue: '')  String name, @JsonKey(defaultValue: '')  String description, @JsonKey(name: 'category_id')  int categoryId, @JsonKey(name: 'image_urls', defaultValue: <String>[])  List<String> imageUrls, @JsonKey(name: 'seller_phones', defaultValue: <String>[])  List<String> sellerPhones, @JsonKey(name: 'location_lat')  double latitude, @JsonKey(name: 'location_long')  double longitude, @JsonKey(defaultValue: 0)  int sector, @JsonKey(defaultValue: 0)  int number, @JsonKey(name: 'sale_type', defaultValue: 'retail')  String saleType, @JsonKey(name: 'logo_url')  String? logoUrl, @JsonKey(name: 'social_networks', defaultValue: <SocialNetworkModel>[])  List<SocialNetworkModel> socialNetworks, @JsonKey(name: 'is_featured')  bool isFeatured, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _ShopModel():
-return $default(_that.id,_that.name,_that.workTime,_that.description,_that.categoryId,_that.imageUrls,_that.sellerPhone,_that.rating,_that.ratingCount,_that.likeCount,_that.latitude,_that.longitude,_that.landmark,_that.isFeatured,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.name,_that.description,_that.categoryId,_that.imageUrls,_that.sellerPhones,_that.latitude,_that.longitude,_that.sector,_that.number,_that.saleType,_that.logoUrl,_that.socialNetworks,_that.isFeatured,_that.createdAt,_that.updatedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -209,10 +209,10 @@ return $default(_that.id,_that.name,_that.workTime,_that.description,_that.categ
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String name, @JsonKey(name: 'work_time')  String workTime,  String description, @JsonKey(name: 'category_id')  int categoryId, @JsonKey(name: 'image_urls')  List<String> imageUrls, @JsonKey(name: 'seller_phone')  String sellerPhone,  double rating, @JsonKey(name: 'rating_count')  int ratingCount, @JsonKey(name: 'like_count')  int likeCount, @JsonKey(name: 'location_lat')  double latitude, @JsonKey(name: 'location_long')  double longitude, @JsonKey(name: 'location_str')  String landmark, @JsonKey(name: 'is_featured')  bool isFeatured, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id, @JsonKey(defaultValue: '')  String name, @JsonKey(defaultValue: '')  String description, @JsonKey(name: 'category_id')  int categoryId, @JsonKey(name: 'image_urls', defaultValue: <String>[])  List<String> imageUrls, @JsonKey(name: 'seller_phones', defaultValue: <String>[])  List<String> sellerPhones, @JsonKey(name: 'location_lat')  double latitude, @JsonKey(name: 'location_long')  double longitude, @JsonKey(defaultValue: 0)  int sector, @JsonKey(defaultValue: 0)  int number, @JsonKey(name: 'sale_type', defaultValue: 'retail')  String saleType, @JsonKey(name: 'logo_url')  String? logoUrl, @JsonKey(name: 'social_networks', defaultValue: <SocialNetworkModel>[])  List<SocialNetworkModel> socialNetworks, @JsonKey(name: 'is_featured')  bool isFeatured, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _ShopModel() when $default != null:
-return $default(_that.id,_that.name,_that.workTime,_that.description,_that.categoryId,_that.imageUrls,_that.sellerPhone,_that.rating,_that.ratingCount,_that.likeCount,_that.latitude,_that.longitude,_that.landmark,_that.isFeatured,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.name,_that.description,_that.categoryId,_that.imageUrls,_that.sellerPhones,_that.latitude,_that.longitude,_that.sector,_that.number,_that.saleType,_that.logoUrl,_that.socialNetworks,_that.isFeatured,_that.createdAt,_that.updatedAt);case _:
   return null;
 
 }
@@ -224,28 +224,40 @@ return $default(_that.id,_that.name,_that.workTime,_that.description,_that.categ
 @JsonSerializable()
 
 class _ShopModel implements ShopModel {
-  const _ShopModel({required this.id, required this.name, @JsonKey(name: 'work_time') required this.workTime, required this.description, @JsonKey(name: 'category_id') required this.categoryId, @JsonKey(name: 'image_urls') required final  List<String> imageUrls, @JsonKey(name: 'seller_phone') required this.sellerPhone, required this.rating, @JsonKey(name: 'rating_count') required this.ratingCount, @JsonKey(name: 'like_count') required this.likeCount, @JsonKey(name: 'location_lat') required this.latitude, @JsonKey(name: 'location_long') required this.longitude, @JsonKey(name: 'location_str') required this.landmark, @JsonKey(name: 'is_featured') required this.isFeatured, @JsonKey(name: 'created_at') required this.createdAt, @JsonKey(name: 'updated_at') required this.updatedAt}): _imageUrls = imageUrls;
+  const _ShopModel({required this.id, @JsonKey(defaultValue: '') required this.name, @JsonKey(defaultValue: '') required this.description, @JsonKey(name: 'category_id') required this.categoryId, @JsonKey(name: 'image_urls', defaultValue: <String>[]) required final  List<String> imageUrls, @JsonKey(name: 'seller_phones', defaultValue: <String>[]) required final  List<String> sellerPhones, @JsonKey(name: 'location_lat') required this.latitude, @JsonKey(name: 'location_long') required this.longitude, @JsonKey(defaultValue: 0) required this.sector, @JsonKey(defaultValue: 0) required this.number, @JsonKey(name: 'sale_type', defaultValue: 'retail') required this.saleType, @JsonKey(name: 'logo_url') this.logoUrl, @JsonKey(name: 'social_networks', defaultValue: <SocialNetworkModel>[]) required final  List<SocialNetworkModel> socialNetworks, @JsonKey(name: 'is_featured') required this.isFeatured, @JsonKey(name: 'created_at') required this.createdAt, @JsonKey(name: 'updated_at') required this.updatedAt}): _imageUrls = imageUrls,_sellerPhones = sellerPhones,_socialNetworks = socialNetworks;
   factory _ShopModel.fromJson(Map<String, dynamic> json) => _$ShopModelFromJson(json);
 
 @override final  int id;
-@override final  String name;
-@override@JsonKey(name: 'work_time') final  String workTime;
-@override final  String description;
+@override@JsonKey(defaultValue: '') final  String name;
+@override@JsonKey(defaultValue: '') final  String description;
 @override@JsonKey(name: 'category_id') final  int categoryId;
  final  List<String> _imageUrls;
-@override@JsonKey(name: 'image_urls') List<String> get imageUrls {
+@override@JsonKey(name: 'image_urls', defaultValue: <String>[]) List<String> get imageUrls {
   if (_imageUrls is EqualUnmodifiableListView) return _imageUrls;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_imageUrls);
 }
 
-@override@JsonKey(name: 'seller_phone') final  String sellerPhone;
-@override final  double rating;
-@override@JsonKey(name: 'rating_count') final  int ratingCount;
-@override@JsonKey(name: 'like_count') final  int likeCount;
+ final  List<String> _sellerPhones;
+@override@JsonKey(name: 'seller_phones', defaultValue: <String>[]) List<String> get sellerPhones {
+  if (_sellerPhones is EqualUnmodifiableListView) return _sellerPhones;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_sellerPhones);
+}
+
 @override@JsonKey(name: 'location_lat') final  double latitude;
 @override@JsonKey(name: 'location_long') final  double longitude;
-@override@JsonKey(name: 'location_str') final  String landmark;
+@override@JsonKey(defaultValue: 0) final  int sector;
+@override@JsonKey(defaultValue: 0) final  int number;
+@override@JsonKey(name: 'sale_type', defaultValue: 'retail') final  String saleType;
+@override@JsonKey(name: 'logo_url') final  String? logoUrl;
+ final  List<SocialNetworkModel> _socialNetworks;
+@override@JsonKey(name: 'social_networks', defaultValue: <SocialNetworkModel>[]) List<SocialNetworkModel> get socialNetworks {
+  if (_socialNetworks is EqualUnmodifiableListView) return _socialNetworks;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_socialNetworks);
+}
+
 @override@JsonKey(name: 'is_featured') final  bool isFeatured;
 @override@JsonKey(name: 'created_at') final  DateTime createdAt;
 @override@JsonKey(name: 'updated_at') final  DateTime updatedAt;
@@ -263,16 +275,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ShopModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.workTime, workTime) || other.workTime == workTime)&&(identical(other.description, description) || other.description == description)&&(identical(other.categoryId, categoryId) || other.categoryId == categoryId)&&const DeepCollectionEquality().equals(other._imageUrls, _imageUrls)&&(identical(other.sellerPhone, sellerPhone) || other.sellerPhone == sellerPhone)&&(identical(other.rating, rating) || other.rating == rating)&&(identical(other.ratingCount, ratingCount) || other.ratingCount == ratingCount)&&(identical(other.likeCount, likeCount) || other.likeCount == likeCount)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.landmark, landmark) || other.landmark == landmark)&&(identical(other.isFeatured, isFeatured) || other.isFeatured == isFeatured)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ShopModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.categoryId, categoryId) || other.categoryId == categoryId)&&const DeepCollectionEquality().equals(other._imageUrls, _imageUrls)&&const DeepCollectionEquality().equals(other._sellerPhones, _sellerPhones)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.sector, sector) || other.sector == sector)&&(identical(other.number, number) || other.number == number)&&(identical(other.saleType, saleType) || other.saleType == saleType)&&(identical(other.logoUrl, logoUrl) || other.logoUrl == logoUrl)&&const DeepCollectionEquality().equals(other._socialNetworks, _socialNetworks)&&(identical(other.isFeatured, isFeatured) || other.isFeatured == isFeatured)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,workTime,description,categoryId,const DeepCollectionEquality().hash(_imageUrls),sellerPhone,rating,ratingCount,likeCount,latitude,longitude,landmark,isFeatured,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,id,name,description,categoryId,const DeepCollectionEquality().hash(_imageUrls),const DeepCollectionEquality().hash(_sellerPhones),latitude,longitude,sector,number,saleType,logoUrl,const DeepCollectionEquality().hash(_socialNetworks),isFeatured,createdAt,updatedAt);
 
 @override
 String toString() {
-  return 'ShopModel(id: $id, name: $name, workTime: $workTime, description: $description, categoryId: $categoryId, imageUrls: $imageUrls, sellerPhone: $sellerPhone, rating: $rating, ratingCount: $ratingCount, likeCount: $likeCount, latitude: $latitude, longitude: $longitude, landmark: $landmark, isFeatured: $isFeatured, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'ShopModel(id: $id, name: $name, description: $description, categoryId: $categoryId, imageUrls: $imageUrls, sellerPhones: $sellerPhones, latitude: $latitude, longitude: $longitude, sector: $sector, number: $number, saleType: $saleType, logoUrl: $logoUrl, socialNetworks: $socialNetworks, isFeatured: $isFeatured, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -283,7 +295,7 @@ abstract mixin class _$ShopModelCopyWith<$Res> implements $ShopModelCopyWith<$Re
   factory _$ShopModelCopyWith(_ShopModel value, $Res Function(_ShopModel) _then) = __$ShopModelCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String name,@JsonKey(name: 'work_time') String workTime, String description,@JsonKey(name: 'category_id') int categoryId,@JsonKey(name: 'image_urls') List<String> imageUrls,@JsonKey(name: 'seller_phone') String sellerPhone, double rating,@JsonKey(name: 'rating_count') int ratingCount,@JsonKey(name: 'like_count') int likeCount,@JsonKey(name: 'location_lat') double latitude,@JsonKey(name: 'location_long') double longitude,@JsonKey(name: 'location_str') String landmark,@JsonKey(name: 'is_featured') bool isFeatured,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'updated_at') DateTime updatedAt
+ int id,@JsonKey(defaultValue: '') String name,@JsonKey(defaultValue: '') String description,@JsonKey(name: 'category_id') int categoryId,@JsonKey(name: 'image_urls', defaultValue: <String>[]) List<String> imageUrls,@JsonKey(name: 'seller_phones', defaultValue: <String>[]) List<String> sellerPhones,@JsonKey(name: 'location_lat') double latitude,@JsonKey(name: 'location_long') double longitude,@JsonKey(defaultValue: 0) int sector,@JsonKey(defaultValue: 0) int number,@JsonKey(name: 'sale_type', defaultValue: 'retail') String saleType,@JsonKey(name: 'logo_url') String? logoUrl,@JsonKey(name: 'social_networks', defaultValue: <SocialNetworkModel>[]) List<SocialNetworkModel> socialNetworks,@JsonKey(name: 'is_featured') bool isFeatured,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'updated_at') DateTime updatedAt
 });
 
 
@@ -300,22 +312,22 @@ class __$ShopModelCopyWithImpl<$Res>
 
 /// Create a copy of ShopModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? workTime = null,Object? description = null,Object? categoryId = null,Object? imageUrls = null,Object? sellerPhone = null,Object? rating = null,Object? ratingCount = null,Object? likeCount = null,Object? latitude = null,Object? longitude = null,Object? landmark = null,Object? isFeatured = null,Object? createdAt = null,Object? updatedAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? description = null,Object? categoryId = null,Object? imageUrls = null,Object? sellerPhones = null,Object? latitude = null,Object? longitude = null,Object? sector = null,Object? number = null,Object? saleType = null,Object? logoUrl = freezed,Object? socialNetworks = null,Object? isFeatured = null,Object? createdAt = null,Object? updatedAt = null,}) {
   return _then(_ShopModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,workTime: null == workTime ? _self.workTime : workTime // ignore: cast_nullable_to_non_nullable
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,categoryId: null == categoryId ? _self.categoryId : categoryId // ignore: cast_nullable_to_non_nullable
 as int,imageUrls: null == imageUrls ? _self._imageUrls : imageUrls // ignore: cast_nullable_to_non_nullable
-as List<String>,sellerPhone: null == sellerPhone ? _self.sellerPhone : sellerPhone // ignore: cast_nullable_to_non_nullable
-as String,rating: null == rating ? _self.rating : rating // ignore: cast_nullable_to_non_nullable
-as double,ratingCount: null == ratingCount ? _self.ratingCount : ratingCount // ignore: cast_nullable_to_non_nullable
-as int,likeCount: null == likeCount ? _self.likeCount : likeCount // ignore: cast_nullable_to_non_nullable
-as int,latitude: null == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable
+as List<String>,sellerPhones: null == sellerPhones ? _self._sellerPhones : sellerPhones // ignore: cast_nullable_to_non_nullable
+as List<String>,latitude: null == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable
 as double,longitude: null == longitude ? _self.longitude : longitude // ignore: cast_nullable_to_non_nullable
-as double,landmark: null == landmark ? _self.landmark : landmark // ignore: cast_nullable_to_non_nullable
-as String,isFeatured: null == isFeatured ? _self.isFeatured : isFeatured // ignore: cast_nullable_to_non_nullable
+as double,sector: null == sector ? _self.sector : sector // ignore: cast_nullable_to_non_nullable
+as int,number: null == number ? _self.number : number // ignore: cast_nullable_to_non_nullable
+as int,saleType: null == saleType ? _self.saleType : saleType // ignore: cast_nullable_to_non_nullable
+as String,logoUrl: freezed == logoUrl ? _self.logoUrl : logoUrl // ignore: cast_nullable_to_non_nullable
+as String?,socialNetworks: null == socialNetworks ? _self._socialNetworks : socialNetworks // ignore: cast_nullable_to_non_nullable
+as List<SocialNetworkModel>,isFeatured: null == isFeatured ? _self.isFeatured : isFeatured // ignore: cast_nullable_to_non_nullable
 as bool,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,
